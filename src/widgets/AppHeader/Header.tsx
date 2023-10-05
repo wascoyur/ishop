@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "./header-styles.scss"; // Импортируем стили
+import "./header-styles.scss";
 import { CloseIcon } from "./CloseIcon.tsx";
 import { BurgerMenu } from "./BurgerMenu.tsx";
 import { Logo } from "./Logo.tsx";
