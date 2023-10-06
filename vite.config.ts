@@ -21,6 +21,7 @@ const alias = srcFolders.reduce((acc, folderName) => {
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "https://wascoyur.github.io/ishop/",
   resolve: {
     alias,
   },
