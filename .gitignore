@@ -26,3 +26,5 @@ package-lock.json
 stats.html
 .vercel
 !/.vercel/
+/.vercel/project.json
+/.vercel/README.txt
