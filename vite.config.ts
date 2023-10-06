@@ -20,34 +20,40 @@ const alias = srcFolders.reduce((acc, folderName) => {
 }, {});
 
 // https://vitejs.dev/config/
-export default defineConfig({
-  base: "https://wascoyur.github.io/ishop/",
-  resolve: {
-    alias,
-  },
-  plugins: [
-    react(),
-    checker({
-      // e.g. use TypeScript check
-      typescript: true,
-    }),
-    visualizer({
-      emitFile: false,
-      filename: "stats.html",
-    }),
-    basicSsl(),
-  ],
-  server: {
-    open: true,
-    cors: false,
-  },
-  css: {
-    modules: {
-      localsConvention: "dashesOnly",
-      generateScopedName: (name: string, filePath: string): string => {
-        const [, fileName] = filePath.split("/").reverse();
-        return `${fileName}_${name}`;
+export default defineConfig(({ mode }) => {
+  let ghPages;
+  // if (mode === "production") {
+  //   ghPages = "https://wascoyur.github.io/ishop/";
+  // }
+  return {
+    base: ghPages,
+    resolve: {
+      alias,
+    },
+    plugins: [
+      react(),
+      checker({
+        // e.g. use TypeScript check
+        typescript: true,
+      }),
+      visualizer({
+        emitFile: false,
+        filename: "stats.html",
+      }),
+      basicSsl(),
+    ],
+    server: {
+      open: true,
+      cors: false,
+    },
+    css: {
+      modules: {
+        localsConvention: "dashesOnly",
+        generateScopedName: (name: string, filePath: string): string => {
+          const [, fileName] = filePath.split("/").reverse();
+          return `${fileName}_${name}`;
+        },
       },
     },
-  },
+  };
 });
