@@ -3,6 +3,8 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "https://ishop-9ark185hu-wascoyur.vercel.app/",
+  "author": "wascoyur",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
