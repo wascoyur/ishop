@@ -1,0 +1,56 @@
+.default-style {
+    display: grid;
+    place-content: center;
+    justify-items: center;
+
+
+    .title-forms .title {
+        margin: 0.5rem 0.25rem;
+        font-size: 2rem;
+    }
+    button {
+        max-width: 6rem;
+        border-radius: 0.35rem;
+        padding: 0.2rem;
+        margin: 1rem;
+    }
+
+    form {
+        display: grid;
+        grid-template-columns:1fr;
+
+        > * {
+            margin: 0.25rem;
+        }
+
+        input {
+            border-radius: 0.35rem;
+            padding: 0.25rem;
+        }
+
+        textarea {
+            min-width: 15rem;
+            min-height: 3rem;
+            border-radius: 0.35rem
+        }
+        .validate-message {
+            color: red;
+            padding: 0.2rem 0.5rem;
+            max-width: 15rem;
+        }
+
+        .input-error {
+            border-color: red;
+
+        }
+
+        .product-image {
+            max-width: 20rem;
+
+            img {
+                width: 300px;
+                height: 300px;
+            }
+        }
+    }
+}

@@ -1,11 +1,14 @@
 import { AppHeader } from "../widgets/AppHeader/Header.tsx";
 import { Routing } from "../pages";
+import { Layout } from "../widgets/Layout.tsx";
 
 function App() {
   return (
     <div className="App">
       <AppHeader />
-      <Routing />
+      <Layout>
+        <Routing />
+      </Layout>
     </div>
   );
 }
