@@ -1,0 +1,10 @@
+type Profile{
+
+}
+type SignIn{
+
+}
+type LogIn{
+    email:String,
+    password:String
+}

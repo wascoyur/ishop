@@ -1,5 +1,6 @@
 import { useProfileStore } from "../app/state.ts";
 import { UserProfile } from "../widgets/UserProfile/UserProfile.tsx";
+import { LoginForm } from "../widgets/LoginForm.tsx";
 
 export const AuthPage = () => {
   const [isUserAuth, clearToken] = useProfileStore((state) => [
@@ -13,17 +14,16 @@ export const AuthPage = () => {
     <div>
       <h1>{isUserAuth() ? "Вход в профиль" : "Регистрация"}</h1>
 
-      {
-        isUserAuth() ? (
-          <>
-            <UserProfile />
-
-            <div className="default-style">
-              <button onClick={clearToken}>Выйти из профиля</button>
-            </div>
-          </>
-        ) : null /*<LoginForm />*/
-      }
+      {isUserAuth() ? (
+        <>
+          <UserProfile />
+          <div className="default-style">
+            <button onClick={clearToken}>Выйти из профиля</button>
+          </div>
+        </>
+      ) : (
+        <LoginForm />
+      )}
     </div>
   );
 };

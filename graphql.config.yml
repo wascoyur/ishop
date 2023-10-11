@@ -1,0 +1,7 @@
+schema: schema.graphql
+documents: '**/*.graphql'
+extensions:
+  endpoints:
+    Default GraphQL Endpoint:
+      url: https://cea3c11a3f62.vps.myjino.ru/graphql
+      introspect: false
