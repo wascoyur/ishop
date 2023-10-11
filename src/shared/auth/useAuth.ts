@@ -1,14 +1,16 @@
-import { ApolloClient, InMemoryCache } from "@apollo/client";
+import { gql, useMutation } from "@apollo/client";
 
-type logIn = [login: string, password: string];
+type logIn = { login: string; password: string };
+
+const LOGIN = gql`
+  mutation Signin($email: String) {
+    token
+  }
+`;
 export const useAuth = (props: logIn) => {
-  let token: unknown;
-  let error: unknown;
-  const [login, password] = props;
-  const API = `http://cea3c11a3f62.vps.myjino.ru/graphql`;
-  const client = new ApolloClient({
-    uri: API,
-    cache: new InMemoryCache(),
+  const [token, error] = useMutation(LOGIN, {
+    variables: { email: props.login, password: props.password },
   });
+
   return { token, error };
 };

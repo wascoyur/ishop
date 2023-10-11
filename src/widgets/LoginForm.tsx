@@ -31,12 +31,12 @@ export const LoginForm = () => {
 
   return (
     <div className="default-style">
-      <form onSubmit={handleLogInUser}>
+      <form onSubmit={() => {}}>
         <label htmlFor="login">Ваш логин</label>
         <input type="text" name="login" ref={loginRef} />
         <label htmlFor="password">Введите пароль</label>
         <input type="password" name="passwoord" ref={passRef} />
-        <button type={"submit"} disabled={!isFilled}>
+        <button type={"submit"} disabled={false}>
           Войти
         </button>
       </form>
