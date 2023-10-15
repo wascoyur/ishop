@@ -7,7 +7,7 @@ import { User } from "../../entities/User.ts";
 export const UserProfile = () => {
   // const [toChangePass, setToChangePass] = useState<boolean>(false);
   const [toChangeProfile, setToChangeProfile] = useState<boolean>(false);
-  const loggedUser = useProfileStore((state) => state.user);
+  const loggedUser = useProfileStore((state) => state.isUserAuth);
 
   const handleProfile = () => {
     setToChangeProfile(true);
