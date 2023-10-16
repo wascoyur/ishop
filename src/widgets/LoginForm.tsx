@@ -5,18 +5,25 @@ import Loader from "./loader/Loader.tsx";
 import { signIn } from "../shared/api/signin.ts";
 import { Auth } from "../shared/api/apiTypes.ts";
 import { ServerErrors } from "../entities/types.ts";
+import { useNavigate } from "react-router-dom";
 
 export const LoginForm = () => {
   const token = useProfileStore((state) => state.token);
   const [login, setLogin] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [data, setData] = useState<Auth>({} as Auth);
-  const { loading } = useAuthSignIn(data);
+  const { loading, isAuth } = useAuthSignIn(data);
+  const navigate = useNavigate();
+  useEffect(() => {
+    isAuth() && navigate("/profile");
+  }, [isAuth]);
 
   const handleLogInUser = async (e: FormEvent) => {
     e.preventDefault();
     login && password && setData({ login, password });
-    if (token) setData({ login: "", password: "" });
+    if (token) {
+      setData({ login: "", password: "" });
+    }
   };
 
   return (
@@ -49,7 +56,10 @@ export const LoginForm = () => {
 const useAuthSignIn = (props: Auth) => {
   const { login, password, commandId } = props;
   const [loading, setLoading] = useState<boolean>(false);
-  const [setToken] = useProfileStore((state) => [state.setToken]);
+  const [setToken, isAuth] = useProfileStore((state) => [
+    state.setToken,
+    state.isUserAuth,
+  ]);
   const [error, setError] = useState<ServerErrors>();
 
   useEffect(() => {
@@ -81,5 +91,5 @@ const useAuthSignIn = (props: Auth) => {
       auth();
     }
   }, [login, password, commandId]);
-  return { error, loading };
+  return { error, loading, isAuth };
 };

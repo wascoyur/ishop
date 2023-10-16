@@ -2,12 +2,12 @@ import Loader from "../loader/Loader.tsx";
 import ModalWindow from "../../features/modal/ModalWindow.tsx";
 import { useState } from "react";
 import { useProfileStore } from "../../app/state.ts";
-import { User } from "../../entities/User.ts";
+import "../../shared/scss/profile-card.scss";
 
 export const UserProfile = () => {
   // const [toChangePass, setToChangePass] = useState<boolean>(false);
   const [toChangeProfile, setToChangeProfile] = useState<boolean>(false);
-  const loggedUser = useProfileStore((state) => state.isUserAuth);
+  const isUserAuth = useProfileStore((state) => state.isUserAuth);
 
   const handleProfile = () => {
     setToChangeProfile(true);
@@ -20,9 +20,9 @@ export const UserProfile = () => {
   return (
     <div className="profile-container">
       <h2>Profile</h2>
-      {loggedUser ? (
+      {isUserAuth() ? (
         <div>
-          <ProfileCard user={loggedUser} onEditProfile={handleProfile} />
+          <ProfileCard onEditProfile={handleProfile} />
         </div>
       ) : (
         <Loader />
@@ -41,31 +41,25 @@ export const UserProfile = () => {
   );
 };
 
-export type typeUserProfileCardProps = {
-  user: User;
-  onEditProfile: () => void;
-};
-export const ProfileCard: React.FC<typeUserProfileCardProps> = ({
-  user,
-  onEditProfile,
-}) => {
+export const ProfileCard = () => {
+  const [user, editUser] = useProfileStore((state) => [
+    state.editUser,
+    state.user,
+  ]);
   return (
     <div className="profile-card">
       <div className="field">Имя</div>
-      <div className="field-value">{user.name}</div>
-      <div className="field">Псевдоним</div>
-      <div className="field-value">{user.username}</div>
-      <div className="field">Телефон</div>
-      <div className="field-value">{user.phone}</div>
+      <div className="field-value">{"name" || user}</div>
+
       <div className="field">email</div>
-      <div className="field-value">{user.email}</div>
-      <div className="field">Компания</div>
-      <div className="field-value">{user?.company?.name}</div>
-      <div className="field">Город</div>
-      <div className="field-value">{user?.address?.city}</div>
-      <div className="field">О себе</div>
-      <div className="field-value">{user?.about}</div>
-      <button onClick={onEditProfile}>Редактировать профиль</button>
+      <div className="field-value">{"email" || user?.email}</div>
+
+      <div className="field">Дата регистрации</div>
+      <div className="field-value">
+        {"Дата" || user?.signUpDate?.getUTCDate()}
+      </div>
+
+      <button onClick={() => editUser()}>Редактировать профиль</button>
     </div>
   );
 };

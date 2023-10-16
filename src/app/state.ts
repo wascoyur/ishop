@@ -3,7 +3,7 @@ import { immer } from "zustand/middleware/immer";
 // import { ApiResponseProduct, TypeProduct } from "src/types/typeProduct";
 // import { BucketItem } from "src/types/typeStore";
 import { persist } from "zustand/middleware";
-import { User } from "../entities/User.ts";
+import { Profile } from "../entities/User.ts";
 
 // type ProductState = {
 //   rawProducts: Array<ApiResponseProduct>;
@@ -103,13 +103,14 @@ import { User } from "../entities/User.ts";
 
 type ProfileState = {
   token: string | null;
-  user: User | null;
+  user: Profile | null;
 };
 type ProfileAction = {
   setToken: (token: ProfileState["token"]) => void;
   clearToken: () => void;
   isUserAuth: () => boolean;
   editUser: (user: ProfileState["user"]) => void;
+  getProfile: () => ProfileState["user"];
 };
 export const useProfileStore = create(
   persist(
@@ -124,13 +125,16 @@ export const useProfileStore = create(
       isUserAuth: () => {
         return Boolean(get().token);
       },
-      editUser: (user: User | null) => {
+      editUser: (user: Profile | null) => {
         if (user !== null)
           set((state) => {
-            if (!state.user) state.user = {} as User;
+            if (!state.user) state.user = {} as Profile;
             state.user.username = user.username || "";
             state.user.about = user.about;
           });
+      },
+      getProfile: () => {
+        state.user;
       },
     })),
     {

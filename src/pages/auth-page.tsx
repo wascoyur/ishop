@@ -12,7 +12,7 @@ export const AuthPage = () => {
   // const isUserAuth = tokenUser || tokenAdmin;
   return (
     <div>
-      <h1>Войти или зарегистрироваться</h1>
+      <h1>{isUserAuth() ? "Вход в профиль" : "Регистрация или Вход"}</h1>
 
       {isUserAuth() ? (
         <>
