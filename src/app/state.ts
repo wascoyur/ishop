@@ -2,8 +2,9 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 // import { ApiResponseProduct, TypeProduct } from "src/types/typeProduct";
 // import { BucketItem } from "src/types/typeStore";
-import { persist } from "zustand/middleware";
+import { devtools, persist } from "zustand/middleware";
 import { Profile } from "../entities/User.ts";
+import { getProfile } from "../shared/api/getProfile.ts";
 
 // type ProductState = {
 //   rawProducts: Array<ApiResponseProduct>;
@@ -110,38 +111,47 @@ type ProfileAction = {
   clearToken: () => void;
   isUserAuth: () => boolean;
   editUser: (user: ProfileState["user"]) => void;
-  getProfile: () => ProfileState["user"];
+  fetchProfile: () => Promise<void>;
 };
 export const useProfileStore = create(
-  persist(
-    immer<ProfileState & ProfileAction>((set, get) => ({
-      token: null,
-      user: null,
-      setToken: (newToken: string | null) => set(() => ({ token: newToken })),
-      clearToken: () =>
-        set(() => ({
-          token: null,
-        })),
-      isUserAuth: () => {
-        return Boolean(get().token);
+  devtools(
+    persist(
+      immer<ProfileState & ProfileAction>((set, get) => ({
+        token: null,
+        user: null,
+        setToken: (newToken: string | null) => set(() => ({ token: newToken })),
+        clearToken: () =>
+          set(() => ({
+            token: null,
+          })),
+        isUserAuth: () => {
+          return Boolean(get().token);
+        },
+        editUser: (user: Profile | null) => {
+          if (user !== null)
+            set((state) => {
+              if (!state.user) state.user = {} as Profile;
+              state.user.username = user.username || "";
+              state.user.about = user.about;
+            });
+        },
+        fetchProfile: async () => {
+          const barrer = get().token;
+          if (barrer?.length) {
+            const profile = await getProfile(barrer);
+            set((state) => {
+              state.user = profile || state.user;
+            });
+          }
+        },
+      })),
+      {
+        name: `token`,
+        partialize: (state) => ({
+          token: state.token,
+        }),
       },
-      editUser: (user: Profile | null) => {
-        if (user !== null)
-          set((state) => {
-            if (!state.user) state.user = {} as Profile;
-            state.user.username = user.username || "";
-            state.user.about = user.about;
-          });
-      },
-      getProfile: () => {
-        state.user;
-      },
-    })),
-    {
-      name: `token`,
-      partialize: (state) => ({
-        token: state.token,
-      }),
-    },
+    ),
+    { store: "Profile" },
   ),
 );

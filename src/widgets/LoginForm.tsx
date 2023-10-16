@@ -2,10 +2,9 @@ import { FormEvent, useEffect, useState } from "react";
 import "../shared/common-form.scss";
 import { useProfileStore } from "../app/state.ts";
 import Loader from "./loader/Loader.tsx";
-import { signIn } from "../shared/api/signin.ts";
 import { Auth } from "../shared/api/apiTypes.ts";
-import { ServerErrors } from "../entities/types.ts";
 import { useNavigate } from "react-router-dom";
+import { useAuthSignIn } from "../shared/api/useSinIn.ts";
 
 export const LoginForm = () => {
   const token = useProfileStore((state) => state.token);
@@ -51,45 +50,4 @@ export const LoginForm = () => {
       )}
     </div>
   );
-};
-
-const useAuthSignIn = (props: Auth) => {
-  const { login, password, commandId } = props;
-  const [loading, setLoading] = useState<boolean>(false);
-  const [setToken, isAuth] = useProfileStore((state) => [
-    state.setToken,
-    state.isUserAuth,
-  ]);
-  const [error, setError] = useState<ServerErrors>();
-
-  useEffect(() => {
-    async function auth() {
-      setLoading(true);
-      try {
-        const answer = await signIn({
-          login,
-          password,
-          commandId,
-        });
-
-        if (answer && answer.ok) {
-          const result = await answer.json();
-          setToken(result.token);
-        } else {
-          if (answer) {
-            const errors = (await answer.json()) as ServerErrors;
-            setError(errors);
-          }
-        }
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
-      }
-    }
-
-    if (login && password) {
-      auth();
-    }
-  }, [login, password, commandId]);
-  return { error, loading, isAuth };
 };

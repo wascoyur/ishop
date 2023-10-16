@@ -40,7 +40,7 @@ export const RegisterForm = () => {
             name="passwoord"
             // onChange={(e) => setPassword(e.target.value)}
           />
-          <button type={"submit"} disabled={!login || !password}>
+          <button type={"submit"} disabled={false}>
             Войти
           </button>
         </form>
