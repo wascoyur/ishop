@@ -14,6 +14,7 @@ export const LoginForm = () => {
   const [data, setData] = useState<Auth>({} as Auth);
   const { loading, isAuth, error } = useAuthSignIn(data);
   const navigate = useNavigate();
+
   useEffect(() => {
     isAuth() && navigate("/profile");
   }, [isAuth]);

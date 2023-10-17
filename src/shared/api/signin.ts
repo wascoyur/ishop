@@ -11,7 +11,6 @@ export const signIn = async (props: Auth) => {
     });
     return await res;
   } catch (e) {
-    console.log(`err`);
     console.error(e);
   }
 };

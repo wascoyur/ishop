@@ -20,7 +20,6 @@ export const useAuthSignIn = (props: Auth) => {
         const answer = await signIn({
           login,
           password,
-          commandId,
         });
 
         if (answer && answer.ok) {

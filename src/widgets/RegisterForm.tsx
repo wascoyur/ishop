@@ -2,24 +2,34 @@ import { FormEvent, useEffect, useRef, useState } from "react";
 import "../shared/common-form.scss";
 import { useNavigate } from "react-router-dom";
 import { useProfileStore } from "../app/state.ts";
-import { AuthResult, ServerErrors } from "../entities/types.ts";
+import { ServerErrors } from "../entities/types.ts";
 import Loader from "./loader/Loader.tsx";
 
 export const RegisterForm = () => {
   const token = useProfileStore((state) => state.token);
-  const navigate = useNavigate();
-  const loginRef = useRef(null);
-  const passwordRef = useRef(null);
+  const loginRef = useRef<HTMLInputElement | null>(null);
+  const passwordRef = useRef<HTMLInputElement | null>(null);
+  const commandRef = useRef<HTMLInputElement | null>(null);
   const [data, setData] = useState<Auth>({} as Auth);
-  const { error, loading, authtoken } = useAuthSignIn(data);
-
+  const { error, loading } = useAuthSignUp(data);
+  const navigate = useNavigate();
+  useEffect(() => {
+    token && navigate("/home");
+  }, [token]);
   const handleLogInUser = async (e: FormEvent) => {
     e.preventDefault();
-    // login && password && setData({ login, password });
-    // !token && navigate("/register");
-    console.log({ error });
+    const login = loginRef.current?.value;
+    const password = passwordRef.current?.value;
+    const commandId = commandRef.current?.value || undefined;
+    login && password && setData({ login, password, commandId });
   };
-
+  const isError = (error: ServerErrors | undefined) => {
+    const err = error?.errors?.length || false;
+    if (err) {
+      // setPassword("");
+    }
+    return err;
+  };
   return (
     <div className="default-style">
       {loading ? (
@@ -27,19 +37,16 @@ export const RegisterForm = () => {
       ) : (
         <form onSubmit={handleLogInUser}>
           <label htmlFor="login">Введите логин</label>
-          <input
-            ref={loginRef}
-            type="text"
-            name="login"
-            // onChange={(e) => setLogin(e.target.value)}
-          />
+          <input ref={loginRef} type="text" name="login" />
           <label htmlFor="password">Введите пароль</label>
-          <input
-            ref={passwordRef}
-            type="password"
-            name="passwoord"
-            // onChange={(e) => setPassword(e.target.value)}
-          />
+          <input ref={passwordRef} type="password" name="passwoord" />
+          <label htmlFor="commandRef">Введите номер команды</label>
+          <input ref={commandRef} type="text" name="passwoord" />
+          {isError(error) && (
+            <strong className="error-message">
+              {error?.errors[0].message}
+            </strong>
+          )}
           <button type={"submit"} disabled={false}>
             Войти
           </button>
@@ -54,53 +61,54 @@ type Auth = {
   password: string;
   commandId?: string;
 };
-export const signIn = async (props: Auth) => {
-  const SIGNIN = `https://19429ba06ff2.vps.myjino.ru/api/signin?login=${props.login}&password=${props.password}`;
 
-  try {
-    const res = await fetch(SIGNIN, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-    });
-    console.log(res.json());
-    const { token, errors } = res as unknown as AuthResult & ServerErrors;
-    return { token: token, errors: errors } as Answer;
-  } catch (e) {
-    console.error(e);
-  }
-};
-
-type Answer = AuthResult & ServerErrors;
-const useAuthSignIn = (props: Auth) => {
+const useAuthSignUp = (props: Auth) => {
   const { login, password, commandId } = props;
   const [loading, setLoading] = useState<boolean>(false);
-  const [error, setError] = useState<ServerErrors>({} as ServerErrors);
-  const [token, setToken] = useState<string>("");
+  const [setToken, isAuth] = useProfileStore((state) => [
+    state.setToken,
+    state.isUserAuth,
+  ]);
+  const [error, setError] = useState<ServerErrors>();
 
   useEffect(() => {
     async function auth() {
       setLoading(true);
-      await signIn({
-        login,
-        password,
-        commandId,
-      }).then((res) => {
-        console.log(res);
-      });
+      try {
+        const answer = await signUp({
+          login,
+          password,
+          commandId,
+        });
+
+        if (answer && answer.ok) {
+          const result = await answer.json();
+          setToken(result.token);
+        } else {
+          if (answer) {
+            const errors = await answer.json();
+
+            setError(errors);
+          }
+        }
+        setLoading(false);
+      } catch (err) {
+        setLoading(false);
+      }
     }
 
     if (login && password) {
       auth();
     }
   }, [login, password, commandId]);
-  return { error, loading, authtoken: token };
+  return { error, loading, isAuth };
 };
 
 export const signUp = async (props: Auth) => {
-  const SIGNIN = `https://19429ba06ff2.vps.myjino.ru/api/signup?login=${props.login}&password=${props.password}`;
+  const SIGNUP = `https://19429ba06ff2.vps.myjino.ru/api/signup`;
   const { login, password, commandId } = props;
   try {
-    const res = await fetch(SIGNIN, {
+    const res = await fetch(SIGNUP, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -108,10 +116,8 @@ export const signUp = async (props: Auth) => {
         password: password,
         commandId: commandId,
       }),
-      // console.log(res.json());
-      // const { token, errors } = res as unknown as AuthResult & ServerErrors;
-      // return { token: token, errors: errors } as Answer;
     });
+    return await res;
   } catch (e) {
     console.error(e);
   }

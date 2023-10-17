@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import { ErrorPage } from "./error-page.tsx";
 import { AuthPage } from "./auth-page.tsx";
+import { RegisterForm } from "../widgets/RegisterForm.tsx";
 
 export function Routing() {
   return (
@@ -17,7 +18,7 @@ export function Routing() {
       {/*<Route path="create-product" element={<AddProductForm />} />*/}
       {/*<Route path="bucket" element={<PageBucket />} />*/}
       {/*<Route path="auth" element={<LoginPage />} />*/}
-      {/*<Route path="register" element={<RegisterUser />} />*/}
+      <Route path="register" element={<RegisterForm />} />
       <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
