@@ -14,7 +14,7 @@ export type Profile = {
   website?: string;
   company?: { name: string; catchPhrase: string; bs: string };
   about?: string;
-  signUpDate: Date;
+  signUpDate: string;
 };
 export type typeUserProfileCardProps = {
   user: Profile;

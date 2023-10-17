@@ -1,18 +1,27 @@
 import Loader from "../loader/Loader.tsx";
 import ModalWindow from "../../features/modal/ModalWindow.tsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useProfileStore } from "../../app/state.ts";
 import "../../shared/scss/profile-card.scss";
 import { Profile } from "../../entities/User.ts";
+import { getProfile } from "../../shared/api/getProfile.ts";
 
 export const UserProfile = () => {
   const [toChangeProfile, setToChangeProfile] = useState<boolean>(false);
   const [isUserAuth] = useProfileStore((state) => [state.isUserAuth]);
-  const [user, editUser, fetchProfile] = useProfileStore((state) => [
+  const [editUser, token] = useProfileStore((state) => [
     state.editUser,
-    state.user,
-    state.fetchProfile,
+    state.token,
   ]);
+  const user = useProfileStore((state) => state.user);
+  useEffect(() => {
+    async function fetchProfile() {
+      const profile = await getProfile(token);
+      editUser(await profile);
+    }
+
+    fetchProfile();
+  }, [isUserAuth]);
 
   function handleCloseModal() {
     setToChangeProfile(false);
@@ -21,10 +30,8 @@ export const UserProfile = () => {
   return (
     <div className="profile-container">
       <h2>Профиль</h2>
-      {isUserAuth() && !!user ? (
-        <div>
-          <ProfileCard profile={user} />
-        </div>
+      {isUserAuth() && user !== null ? (
+        <ProfileCard profile={user} />
       ) : (
         <Loader />
       )}
@@ -42,8 +49,7 @@ export const UserProfile = () => {
   );
 };
 
-export const ProfileCard = (props: { profile: Profile | null }) => {
-  const { profile } = props; // Деструктурируем profile из props
+export const ProfileCard = (props: { profile: Profile }) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   return (
@@ -53,14 +59,18 @@ export const ProfileCard = (props: { profile: Profile | null }) => {
       ) : (
         <div className="profile-card">
           <div className="field">Имя</div>
-          <div className="field-value">{profile?.name || "Нет данных"}</div>
+          <div className="field-value">
+            {props.profile.name || "Нет данных"}
+          </div>
 
           <div className="field">email</div>
-          <div className="field-value">{profile?.email || "Нет данных"}</div>
+          <div className="field-value">
+            {props.profile.email || "Нет данных"}
+          </div>
 
           <div className="field">Дата регистрации</div>
           <div className="field-value">
-            {profile?.signUpDate.toDateString() || "Нет данных"}
+            {props.profile.signUpDate || "Нет данных"}
           </div>
 
           <button onClick={() => {}}>Редактировать профиль</button>

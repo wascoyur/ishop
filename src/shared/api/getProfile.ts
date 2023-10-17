@@ -1,6 +1,4 @@
-import { Profile } from "../../entities/User.ts";
-
-export const getProfile = async (token: string) => {
+export const getProfile = async (token: string | null) => {
   const GET_PROFILE = `https://19429ba06ff2.vps.myjino.ru/api/profile`;
 
   try {
@@ -12,10 +10,9 @@ export const getProfile = async (token: string) => {
         "Access-Control-Allow-Origin": "*",
       },
     });
-    const res = await profile.json();
-    console.log({ res });
-    return res as unknown as Profile;
+    return await profile.json();
   } catch (e) {
     console.error(e);
+    return null;
   }
 };
