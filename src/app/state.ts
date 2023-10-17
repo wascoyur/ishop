@@ -2,6 +2,7 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { devtools, persist } from "zustand/middleware";
 import { Profile } from "../entities/User.ts";
+import {Product} from "../entities/types.ts";
 
 type ProfileState = {
   token: string | null;
@@ -45,5 +46,21 @@ export const useProfileStore = create(
       },
     ),
     { store: "Profile" },
+  ),
+);
+type ProductState = {
+  fullListProducts: Array<unknown>;
+  Product:Product
+};
+type ProductAction={
+    addProductToStore:()
+}
+export const useProductStore = create(
+  devtools(
+    persist(
+      immer<ProductState>((set, get) => ({})),
+      { name: "product" },
+    ),
+    { store: "Products" },
   ),
 );
