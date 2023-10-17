@@ -1,9 +1,9 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
-import "../shared/common-form.scss";
+import "../../shared/common-form.scss";
 import { useNavigate } from "react-router-dom";
-import { useProfileStore } from "../app/state.ts";
-import { ServerErrors } from "../entities/types.ts";
-import Loader from "./loader/Loader.tsx";
+import { useProfileStore } from "../../app/state.ts";
+import { ServerErrors } from "../../entities/types.ts";
+import Loader from "../loader/Loader.tsx";
 
 export const RegisterForm = () => {
   const token = useProfileStore((state) => state.token);

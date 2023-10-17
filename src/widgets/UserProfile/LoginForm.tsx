@@ -1,11 +1,11 @@
 import { FormEvent, useEffect, useState } from "react";
-import "../shared/common-form.scss";
-import { useProfileStore } from "../app/state.ts";
-import Loader from "./loader/Loader.tsx";
-import { Auth } from "../shared/api/apiTypes.ts";
+import "../../shared/common-form.scss";
+import { useProfileStore } from "../../app/state.ts";
+import Loader from "../loader/Loader.tsx";
+import { Auth } from "../../shared/api/apiTypes.ts";
 import { NavLink, useNavigate } from "react-router-dom";
-import { useAuthSignIn } from "../shared/api/useSinIn.ts";
-import { ServerErrors } from "../entities/types.ts";
+import { useAuthSignIn } from "../../shared/api/useSinIn.ts";
+import { ServerErrors } from "../../entities/types.ts";
 
 export const LoginForm = () => {
   const token = useProfileStore((state) => state.token);

@@ -1,6 +1,6 @@
 import { useProfileStore } from "../app/state.ts";
 import { UserProfile } from "../widgets/UserProfile/UserProfile.tsx";
-import { LoginForm } from "../widgets/LoginForm.tsx";
+import { LoginForm } from "../widgets/UserProfile/LoginForm.tsx";
 
 export const AuthPage = () => {
   const [isUserAuth, clearToken] = useProfileStore((state) => [
