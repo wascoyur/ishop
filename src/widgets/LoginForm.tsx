@@ -3,7 +3,7 @@ import "../shared/common-form.scss";
 import { useProfileStore } from "../app/state.ts";
 import Loader from "./loader/Loader.tsx";
 import { Auth } from "../shared/api/apiTypes.ts";
-import { useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { useAuthSignIn } from "../shared/api/useSinIn.ts";
 import { ServerErrors } from "../entities/types.ts";
 
@@ -18,12 +18,16 @@ export const LoginForm = () => {
     isAuth() && navigate("/profile");
   }, [isAuth]);
   const isError = (error: ServerErrors | undefined) => {
-    return error?.errors?.length || false;
+    const err = error?.errors?.length || false;
+    if (err) {
+      // setPassword("");
+    }
+    return err;
   };
   const handleLogInUser = async (e: FormEvent) => {
     e.preventDefault();
     login && password && setData({ login, password });
-    if (token) {
+    if (token !== null) {
       setData({ login: "", password: "" });
     }
   };
@@ -51,6 +55,7 @@ export const LoginForm = () => {
               {error?.errors[0].message}
             </strong>
           )}
+          <NavLink to={"/register"}>Зарегистрироваться</NavLink>
           <button type={"submit"} disabled={!login || !password}>
             Войти
           </button>
