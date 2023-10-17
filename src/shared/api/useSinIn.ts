@@ -28,7 +28,8 @@ export const useAuthSignIn = (props: Auth) => {
           setToken(result.token);
         } else {
           if (answer) {
-            const errors = (await answer.json()) as ServerErrors;
+            const errors = await answer.json();
+
             setError(errors);
           }
         }

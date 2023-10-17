@@ -5,18 +5,21 @@ import Loader from "./loader/Loader.tsx";
 import { Auth } from "../shared/api/apiTypes.ts";
 import { useNavigate } from "react-router-dom";
 import { useAuthSignIn } from "../shared/api/useSinIn.ts";
+import { ServerErrors } from "../entities/types.ts";
 
 export const LoginForm = () => {
   const token = useProfileStore((state) => state.token);
   const [login, setLogin] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [data, setData] = useState<Auth>({} as Auth);
-  const { loading, isAuth } = useAuthSignIn(data);
+  const { loading, isAuth, error } = useAuthSignIn(data);
   const navigate = useNavigate();
   useEffect(() => {
     isAuth() && navigate("/profile");
   }, [isAuth]);
-
+  const isError = (error: ServerErrors | undefined) => {
+    return error?.errors?.length || false;
+  };
   const handleLogInUser = async (e: FormEvent) => {
     e.preventDefault();
     login && password && setData({ login, password });
@@ -43,6 +46,11 @@ export const LoginForm = () => {
             name="passwoord"
             onChange={(e) => setPassword(e.target.value)}
           />
+          {isError(error) && (
+            <strong className="error-message">
+              {error?.errors[0].message}
+            </strong>
+          )}
           <button type={"submit"} disabled={!login || !password}>
             Войти
           </button>
