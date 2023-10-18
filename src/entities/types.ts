@@ -48,6 +48,7 @@ export type ServerErrors = {
 export type AuthResult = {
   token: string;
 };
+export type BucketItem = { productId: number; count: number };
 
 export enum ErrorCode {
   ERR_INCORRECT_EMAIL_OR_PASSWORD = "ERR_INCORRECT_EMAIL_OR_PASSWORD", // Если не корректный email или пароль
