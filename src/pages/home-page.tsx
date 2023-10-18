@@ -1,4 +1,6 @@
-import { useFetchProduct } from "../shared/lists/useFetchProduct.ts";
+import { useFetchProduct } from "../shared/api/useFetchProduct.ts";
+import { useProductStore } from "../app/state.ts";
+import Loader from "../widgets/loader/Loader.tsx";
 
 type homeProps = {
   children?: React.ReactNode;
@@ -15,14 +17,14 @@ export const HomePage = ({ children }: homeProps) => {
 };
 
 export const ProductCardList = () => {
-  const products = useStore((state) => state.products);
+  const products = useProductStore((state) => state.products);
   const idsList = products && products.map((p) => p.id);
   const ShortList = (): React.ReactNode => (
     <div className="card-list">
       {idsList ? (
         idsList.map((p) => (
           <div key={p}>
-            <ProductCard id={p} />
+            <ProductCardList id={p} />
           </div>
         ))
       ) : (
