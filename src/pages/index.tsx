@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import { ErrorPage } from "./error-page.tsx";
 import { AuthPage } from "./auth-page.tsx";
-import { RegisterForm } from "../widgets/UserProfile/RegisterForm.tsx";
 import { HomePage } from "./home-page.tsx";
+import { RegisterForm } from "../widgets/RegisterForm.tsx";
 
 export function Routing() {
   return (

@@ -17,7 +17,6 @@ export const AuthPage = () => {
       {isUserAuth() ? (
         <>
           <UserProfile />
-
           <div className="default-style">
             <button onClick={clearToken}>Выйти из профиля</button>
           </div>
