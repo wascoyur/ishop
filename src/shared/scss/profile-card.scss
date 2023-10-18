@@ -1,0 +1,37 @@
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+}
+
+.profile-card {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 10px;
+  max-width: 20rem;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid rgba(0, 0, 0, 0.15);
+  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+
+  .field {
+    color: rgba(31, 31, 31, 0.7);
+    font-weight: 500;
+  }
+
+  .field-value {
+    padding-left: 1rem;
+  }
+
+  button {
+    grid-column: span 2;
+    margin: 1rem;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+}

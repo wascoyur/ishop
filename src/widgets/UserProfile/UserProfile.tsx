@@ -1,17 +1,27 @@
 import Loader from "../loader/Loader.tsx";
 import ModalWindow from "../../features/modal/ModalWindow.tsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useProfileStore } from "../../app/state.ts";
-import { User } from "../../entities/User.ts";
+import "../../shared/scss/profile-card.scss";
+import { Profile } from "../../entities/User.ts";
+import { getProfile } from "../../shared/api/getProfile.ts";
 
 export const UserProfile = () => {
-  // const [toChangePass, setToChangePass] = useState<boolean>(false);
   const [toChangeProfile, setToChangeProfile] = useState<boolean>(false);
-  const loggedUser = useProfileStore((state) => state.user);
+  const [isUserAuth] = useProfileStore((state) => [state.isUserAuth]);
+  const [editUser, token] = useProfileStore((state) => [
+    state.editUser,
+    state.token,
+  ]);
+  const user = useProfileStore((state) => state.user);
+  useEffect(() => {
+    async function fetchProfile() {
+      const profile = await getProfile(token);
+      editUser(await profile);
+    }
 
-  const handleProfile = () => {
-    setToChangeProfile(true);
-  };
+    fetchProfile();
+  }, [isUserAuth]);
 
   function handleCloseModal() {
     setToChangeProfile(false);
@@ -19,11 +29,9 @@ export const UserProfile = () => {
 
   return (
     <div className="profile-container">
-      <h2>Profile</h2>
-      {loggedUser ? (
-        <div>
-          <ProfileCard user={loggedUser} onEditProfile={handleProfile} />
-        </div>
+      <h2>Профиль</h2>
+      {isUserAuth() && user !== null ? (
+        <ProfileCard profile={user} />
       ) : (
         <Loader />
       )}
@@ -41,31 +49,33 @@ export const UserProfile = () => {
   );
 };
 
-export type typeUserProfileCardProps = {
-  user: User;
-  onEditProfile: () => void;
-};
-export const ProfileCard: React.FC<typeUserProfileCardProps> = ({
-  user,
-  onEditProfile,
-}) => {
+export const ProfileCard = (props: { profile: Profile }) => {
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   return (
-    <div className="profile-card">
-      <div className="field">Имя</div>
-      <div className="field-value">{user.name}</div>
-      <div className="field">Псевдоним</div>
-      <div className="field-value">{user.username}</div>
-      <div className="field">Телефон</div>
-      <div className="field-value">{user.phone}</div>
-      <div className="field">email</div>
-      <div className="field-value">{user.email}</div>
-      <div className="field">Компания</div>
-      <div className="field-value">{user?.company?.name}</div>
-      <div className="field">Город</div>
-      <div className="field-value">{user?.address?.city}</div>
-      <div className="field">О себе</div>
-      <div className="field-value">{user?.about}</div>
-      <button onClick={onEditProfile}>Редактировать профиль</button>
-    </div>
+    <>
+      {isLoading ? (
+        <Loader />
+      ) : (
+        <div className="profile-card">
+          <div className="field">Имя</div>
+          <div className="field-value">
+            {props.profile.name || "Нет данных"}
+          </div>
+
+          <div className="field">email</div>
+          <div className="field-value">
+            {props.profile.email || "Нет данных"}
+          </div>
+
+          <div className="field">Дата регистрации</div>
+          <div className="field-value">
+            {props.profile.signUpDate || "Нет данных"}
+          </div>
+
+          <button onClick={() => {}}>Редактировать профиль</button>
+        </div>
+      )}
+    </>
   );
 };
