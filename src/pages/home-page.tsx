@@ -1,6 +1,8 @@
 import { useFetchProduct } from "../shared/api/useFetchProduct.ts";
 import { useProductStore } from "../app/state.ts";
 import Loader from "../widgets/loader/Loader.tsx";
+import { Badge, Button, Card, Heading, Text } from "@radix-ui/themes";
+import "../shared/scss/product-card.scss";
 
 type homeProps = {
   children?: React.ReactNode;
@@ -18,24 +20,55 @@ export const HomePage = ({ children }: homeProps) => {
 
 export const ProductCardList = () => {
   const products = useProductStore((state) => state.products);
-  const idsList = products && products.map((p) => p.id);
-  const ShortList = (): React.ReactNode => (
-    <div className="card-list">
-      {idsList ? (
-        idsList.map((p) => (
-          <div key={p}>
-            <ProductCardList id={p} />
-          </div>
-        ))
-      ) : (
-        <Loader />
-      )}
-    </div>
-  );
+
   return (
     <div className="product-card-list">
       <h3>Список товаров</h3>
-      <ShortList />
+      <div className="product-card-grid">
+        {products?.length ? (
+          products.map((item) => (
+            <Card
+              size="1"
+              style={{ maxWidth: 240 }}
+              key={item.id + Math.random()}
+              className="product-card"
+            >
+              <img
+                className="product-image"
+                src={item.photo}
+                style={{
+                  display: "block",
+                  objectFit: "contain",
+                  width: "100%",
+                  height: 140,
+                }}
+              />
+              <Text size="4">
+                <Heading as="h4">{item.name}</Heading>
+                <Text>Категория: {item.category.name}</Text>
+                <Text as="p">{item.desc}</Text>
+                <Text>
+                  <Badge variant="solid" color="indigo">
+                    Цена: {item.price} р.
+                  </Badge>
+                  <Text>
+                    <Badge variant="outline" color="grass">
+                      Старая цена: {item.oldPrice} р.
+                    </Badge>
+                  </Text>
+                </Text>
+                <Text as="p">
+                  <Button color="blue" variant="classic">
+                    В корзину
+                  </Button>
+                </Text>
+              </Text>
+            </Card>
+          ))
+        ) : (
+          <Loader />
+        )}
+      </div>
     </div>
   );
 };

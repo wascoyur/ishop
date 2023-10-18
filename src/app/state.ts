@@ -56,7 +56,7 @@ type ProductStore = {
 type ProductActions = {
   addToBucket: (bucketItem: BucketItem) => void;
   getProductById: (idProduct: number) => Product | undefined;
-  addProductToStore: (product: Product) => void;
+  addProductToStore: (product: Product[]) => void;
   getBucket: () => BucketItem[] | null;
   removeItemBucketById: (bucketId: number) => void;
 };
@@ -66,10 +66,10 @@ export const useProductStore = create(
       immer<ProductStore & ProductActions>((set, get) => ({
         products: null,
         bucket: null,
-        addProductToStore: (product: Product) =>
+        addProductToStore: (product: Product[]) =>
           set((state) => {
             const currentProducts = state.products || [];
-            state.products = [...currentProducts, product];
+            state.products = [...currentProducts, ...product];
           }),
         addToBucket: (bucketItem: BucketItem) =>
           set((state) => {
