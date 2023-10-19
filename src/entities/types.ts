@@ -3,8 +3,8 @@ export type Product = {
   name: string;
   photo?: string;
   desc?: string;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   oldPrice?: number;
   price: number;
   category: Category;

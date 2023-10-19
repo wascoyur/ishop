@@ -1,8 +1,9 @@
 import { useFetchProduct } from "../shared/api/useFetchProduct.ts";
 import { useProductStore } from "../app/state.ts";
 import Loader from "../widgets/loader/Loader.tsx";
-import { Badge, Button, Card, Heading, Text } from "@radix-ui/themes";
+import { Badge, Button, Card, Dialog, Heading, Text } from "@radix-ui/themes";
 import "../shared/scss/product-card.scss";
+import { AddToCartComponent } from "../widgets/product/addToCartComponent.tsx";
 
 type homeProps = {
   children?: React.ReactNode;
@@ -58,9 +59,18 @@ export const ProductCardList = () => {
                   </Text>
                 </Text>
                 <Text as="p">
-                  <Button color="blue" variant="classic">
-                    В корзину
-                  </Button>
+                  <Dialog.Root>
+                    <Dialog.Trigger>
+                      <Button color="blue" variant="classic" mt="2">
+                        В корзину
+                      </Button>
+                    </Dialog.Trigger>
+                    <Dialog.Content>
+                      <AddToCartComponent
+                        productId={item.id}
+                      ></AddToCartComponent>
+                    </Dialog.Content>
+                  </Dialog.Root>
                 </Text>
               </Text>
             </Card>

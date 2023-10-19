@@ -44,8 +44,8 @@ export const useProfileStore = create(
           token: state.token,
         }),
       },
-    ),
-    { store: "Profile" },
+    ) /*,
+    { name: "Profile" },*/,
   ),
 );
 
@@ -59,6 +59,7 @@ type ProductActions = {
   addProductToStore: (product: Product[]) => void;
   getBucket: () => BucketItem[] | null;
   removeItemBucketById: (bucketId: number) => void;
+  removeProductById: (productId: number) => void;
 };
 export const useProductStore = create(
   devtools(
@@ -92,18 +93,24 @@ export const useProductStore = create(
             );
             state.bucket = newBucket || state.bucket;
           }),
+        removeProductById: (productId: number) =>
+          set((state) => {
+            const newBucket = get().bucket?.filter(
+              (item) => item.productId !== productId,
+            );
+            state.bucket = newBucket || state.bucket;
+          }),
       })),
       {
         name: `Product`,
         partialize: (state) => ({
-          product: state.products,
           bucket: state.bucket,
         }),
       },
-    ),
+    ) /*,
     {
-      store: "Product",
-    },
+      name: "Product",
+    },*/,
   ),
 );
 

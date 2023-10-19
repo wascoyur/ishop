@@ -35,6 +35,7 @@ const Navigation: React.FC<NavigationProps> = ({ isMobileMenuOpen }) => {
       className={`navigation ${isMobileMenuOpen ? "navigation--mobile" : ""}`}
     >
       <NavLink to={`/`}>Главная</NavLink>
+      <NavLink to={`products`}>Товары</NavLink>
       <NavLink to={`bucket`}>Корзина</NavLink>
       <NavLink to={`profile`}>Профиль</NavLink>
     </ul>

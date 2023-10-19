@@ -3,6 +3,7 @@ import { ErrorPage } from "./error-page.tsx";
 import { AuthPage } from "./auth-page.tsx";
 import { HomePage } from "./home-page.tsx";
 import { RegisterForm } from "../widgets/UserProfile/RegisterForm.tsx";
+import { ProductsPage } from "./products-page.tsx";
 
 export function Routing() {
   return (
@@ -10,7 +11,7 @@ export function Routing() {
       <Route index element={<HomePage />} />
       <Route path="profile" element={<AuthPage />} />
       {/*<Route path="products" element={<ProductPage />} />*/}
-      {/*<Route path="products/edit-products" element={<AddProductForm />} />*/}
+      <Route path="products" element={<ProductsPage />} />
       {/*<Route*/}
       {/*  path="products/product-card/:productId"*/}
       {/*  element={<ProductCard />}*/}
