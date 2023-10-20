@@ -4,6 +4,7 @@ import { AuthPage } from "./auth-page.tsx";
 import { HomePage } from "./home-page.tsx";
 import { RegisterForm } from "../widgets/UserProfile/RegisterForm.tsx";
 import { ProductsPage } from "./products-page.tsx";
+import { BucketPage } from "./bucket-page.tsx";
 
 export function Routing() {
   return (
@@ -18,7 +19,7 @@ export function Routing() {
       {/*/>*/}
 
       {/*<Route path="create-product" element={<AddProductForm />} />*/}
-      {/*<Route path="bucket" element={<PageBucket />} />*/}
+      <Route path="bucket" element={<BucketPage />} />
       {/*<Route path="auth" element={<LoginPage />} />*/}
       <Route path="register" element={<RegisterForm />} />
       <Route path="*" element={<ErrorPage />} />

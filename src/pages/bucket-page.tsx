@@ -1,34 +1,25 @@
-import { Box, Button, Table } from "@radix-ui/themes";
 import { useProductStore, useProfileStore } from "../app/state.ts";
-import Loader from "../widgets/loader/Loader.tsx";
-import ModalWindow from "../features/modal/ModalWindow.tsx";
+import { Box, Button, Table } from "@radix-ui/themes";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
-export const ProductsPage = () => {
-  const [products, addProductToStore, removeProductById] = useProductStore(
-    (state) => [
-      state.products,
-      state.addProductToStore,
-      state.removeProductById,
-    ],
+export const BucketPage = () => {
+  const [bucket, getProductById, removeItemBucketById] = useProductStore(
+    (state) => [state.bucket, state.getProductById, state.removeItemBucketById],
   );
   const isAuth = useProfileStore((state) => state.isUserAuth);
   const navigate = useNavigate();
   useEffect(() => {
     !isAuth() && navigate("/profile");
   }, [isAuth]);
-
   return (
     <div>
-      <h1>Страница редактирования товаров товаров</h1>
-
+      <h1>Корзина</h1>
       <Box>
-        {products ? (
+        {bucket?.length ? (
           <Table.Root>
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeaderCell>id</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Наименование</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Фото</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Создан</Table.ColumnHeaderCell>
@@ -38,14 +29,13 @@ export const ProductsPage = () => {
                 <Table.ColumnHeaderCell>Действия</Table.ColumnHeaderCell>
               </Table.Row>
             </Table.Header>
-
             <Table.Body>
-              {products.map((p) => {
-                const dateCreated = new Date(p.createdAt);
-                const datemodify = new Date(p.updatedAt);
+              {bucket.map((item) => {
+                const p = getProductById(item.productId)!;
+                const dateCreated = new Date(p.createdAt) || new Date();
+                const datemodify = new Date(p.updatedAt) || new Date();
                 return (
                   <Table.Row key={p.id + Math.random()}>
-                    <Table.Cell style={{ width: "3rem" }}>{p.id}</Table.Cell>
                     <Table.Cell width={2}>{p.name}</Table.Cell>
                     <Table.Cell justify="start">
                       {
@@ -66,12 +56,14 @@ export const ProductsPage = () => {
                     <Table.Cell>{p.price} р.</Table.Cell>
                     <Table.Cell>{p.category.name} р.</Table.Cell>
                     <Table.Cell>
-                      <Box>
-                        <Button color="red" size="2" my="2">
-                          Удалить
-                        </Button>
-                        <Button size="2">Редактировать</Button>
-                      </Box>
+                      <Button
+                        color="indigo"
+                        my="2"
+                        size="4"
+                        onClick={() => removeItemBucketById(item.productId)}
+                      >
+                        Удалить из корзины
+                      </Button>
                     </Table.Cell>
                   </Table.Row>
                 );
@@ -79,9 +71,7 @@ export const ProductsPage = () => {
             </Table.Body>
           </Table.Root>
         ) : (
-          <ModalWindow visible={true}>
-            <Loader />
-          </ModalWindow>
+          <div>В корзине пока нет товаров</div>
         )}
       </Box>
     </div>
