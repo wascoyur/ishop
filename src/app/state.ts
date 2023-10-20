@@ -55,11 +55,11 @@ type ProductStore = {
 };
 type ProductActions = {
   addToBucket: (bucketItem: BucketItem) => void;
-  getProductById: (idProduct: number) => Product | undefined;
+  getProductById: (idProduct: string) => Product | undefined;
   addProductToStore: (product: Product[]) => void;
   getBucket: () => BucketItem[] | null;
-  removeItemBucketById: (bucketId: number) => void;
-  removeProductById: (productId: number) => void;
+  removeItemBucketById: (bucketId: string) => void;
+  removeProductById: (productId: string) => void;
 };
 export const useProductStore = create(
   devtools(
@@ -77,23 +77,22 @@ export const useProductStore = create(
             const currentBucket = state.bucket || [];
             state.bucket = [...currentBucket, bucketItem];
           }),
-        getProductById: (idProduct: number) => {
-          const product = get().products?.length
-            ? get().products?.find((p) => parseInt(p.id) === idProduct)
-            : undefined;
-          return product;
+        getProductById: (idProduct: string) => {
+          const filteredItem = () =>
+            get().products?.find((p) => p.id === idProduct);
+          return get().products?.length ? filteredItem() : undefined;
         },
         getBucket: () => {
           return get().bucket;
         },
-        removeItemBucketById: (bucketId: number) =>
+        removeItemBucketById: (bucketId: string) =>
           set((state) => {
             const newBucket = get().bucket?.filter(
               (item) => item.productId !== bucketId,
             );
             state.bucket = newBucket || state.bucket;
           }),
-        removeProductById: (productId: number) =>
+        removeProductById: (productId: string) =>
           set((state) => {
             const newBucket = get().bucket?.filter(
               (item) => item.productId !== productId,

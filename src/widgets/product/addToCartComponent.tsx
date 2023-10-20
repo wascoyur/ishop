@@ -1,14 +1,15 @@
 import { useProductStore } from "../../app/state.ts";
-import { Badge, Box, Button, Dialog, Flex, Text } from "@radix-ui/themes";
+import { Box, Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
 import Loader from "../loader/Loader.tsx";
+import { useState } from "react";
 
 export const AddToCartComponent = (props: { productId: string }) => {
   const [getProductById, addToBucket] = useProductStore((state) => [
     state.getProductById,
     state.addToBucket,
   ]);
-  console.log(props.productId);
-  const product = getProductById(parseInt(props.productId));
+  const [countProduct, setCountProduct] = useState<number>(1);
+  const product = getProductById(props.productId);
   return (
     <div>
       {product ? (
@@ -21,9 +22,6 @@ export const AddToCartComponent = (props: { productId: string }) => {
             <Text size="2" mb="1" weight="bold">
               Наименование продукта: {product.name}
             </Text>
-            <Badge>{product.id}</Badge>
-            <Badge>{props.productId}</Badge>
-
             <Text size="2" mb="1" weight="bold">
               <Box>
                 <img
@@ -34,18 +32,53 @@ export const AddToCartComponent = (props: { productId: string }) => {
                     width: "100%",
                     height: 140,
                   }}
+                  alt={product.name}
                 />
               </Box>
             </Text>
           </Flex>
-          <Flex gap="3" mt="4" justify="end">
+          <Box>
+            <Flex gap="2" justify="center" my="2">
+              <Button
+                radius="full"
+                onClick={() => setCountProduct(countProduct + 1)}
+              >
+                +
+              </Button>
+              <TextField.Input
+                onChange={(e) => {
+                  setCountProduct(parseInt(e.target.value));
+                }}
+                type="number"
+                placeholder="кол"
+                value={countProduct}
+                style={{ width: "3rem" }}
+              />
+              <Button
+                radius="full"
+                onClick={() => {
+                  countProduct > 1 ? setCountProduct(countProduct - 1) : null;
+                }}
+              >
+                -
+              </Button>
+            </Flex>
+          </Box>
+          <Flex gap="3" mt="4" justify="center">
             <Dialog.Close>
-              <Button variant="soft" color="gray">
-                Cancel
+              <Button
+                onClick={() =>
+                  addToBucket({
+                    productId: props.productId,
+                    count: countProduct,
+                  })
+                }
+              >
+                В корзину
               </Button>
             </Dialog.Close>
             <Dialog.Close>
-              <Button>Save</Button>
+              <Button>Отменить</Button>
             </Dialog.Close>
           </Flex>
         </>
