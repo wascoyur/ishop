@@ -102,10 +102,15 @@ export const useProductStore = create(
             );
             state.bucket = newBucket || state.bucket;
           }),
-        setCategories: (categoies: Category[]) =>
+        setCategories: (categories: Category[]) =>
           set((state) => {
-            const currentCat = get().categories || new Array<Category>();
-            state.categories = [...currentCat, ...categoies];
+            const currentCat = state.categories || new Array<Category>();
+            const newCat: Category[] = Array.from(
+              new Set(
+                [...currentCat, ...categories].map((c) => JSON.stringify(c)),
+              ),
+            ).map((str) => JSON.parse(str));
+            state.categories = newCat;
           }),
       })),
       {

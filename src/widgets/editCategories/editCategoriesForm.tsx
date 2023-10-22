@@ -7,14 +7,14 @@ import { Params } from "../../entities/types.ts";
 import Loader from "../loader/Loader.tsx";
 import * as Toast from "@radix-ui/react-toast";
 
-export const ButtonEditProduct = (props: { productId: string }) => {
+export const ButtonEditCategory = (props: { categoryId: string }) => {
   const [getProductById, categories] = useProductStore((state) => [
     state.getProductById,
     state.categories,
   ]);
   const [loading, setLoading] = useState<boolean>(false);
   const token = useProfileStore((state) => state.token);
-  const targetProduct = getProductById(props.productId);
+  const targetProduct = getProductById(props.categoryId);
 
   const handleSubmit = async (
     e: HTMLFormElement | FormEvent<HTMLFormElement>,
@@ -31,7 +31,7 @@ export const ButtonEditProduct = (props: { productId: string }) => {
     setLoading(true);
     const { response, errors } = await putProduct({
       token: token!,
-      params: { ...updatedProduct, id: props.productId },
+      params: { ...updatedProduct, id: props.categoryId },
     });
     if (errors) {
       setLoading(false);

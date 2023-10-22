@@ -5,13 +5,14 @@ import { HomePage } from "./home-page.tsx";
 import { RegisterForm } from "../widgets/UserProfile/RegisterForm.tsx";
 import { ProductsPage } from "./products-page.tsx";
 import { BucketPage } from "./bucket-page.tsx";
+import { CategoryPage } from "./category-page.tsx";
 
 export function Routing() {
   return (
     <Routes>
       <Route index element={<HomePage />} />
       <Route path="profile" element={<AuthPage />} />
-      {/*<Route path="products" element={<ProductPage />} />*/}
+      <Route path="categories" element={<CategoryPage />} />
       <Route path="products" element={<ProductsPage />} />
       {/*<Route*/}
       {/*  path="products/product-card/:productId"*/}
