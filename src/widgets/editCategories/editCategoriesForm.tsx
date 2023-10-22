@@ -1,4 +1,4 @@
-import { Box, Button, Dialog } from "@radix-ui/themes";
+import { Box, Button, Dialog, Flex } from "@radix-ui/themes";
 import * as Form from "@radix-ui/react-form";
 import { useProductStore, useProfileStore } from "../../app/state.ts";
 import { FormEvent, useState } from "react";
@@ -44,59 +44,33 @@ export const ButtonEditCategory = (props: { categoryId: string }) => {
       return <Toast.Root></Toast.Root>;
     }
   };
-  const FormEditProduct = () => (
+  const FormEditCategory = () => (
     <Form.Root onSubmit={(e) => handleSubmit(e)}>
       <Box>
         <Form.Field name={"productName"}>
-          <Form.Label>Наименование продукта</Form.Label>
+          <Form.Label>Наименование категории</Form.Label>
           <Form.Message match="valueMissing">
-            Введите наименование товара
-          </Form.Message>
-          <Form.Control asChild>
-            <input placeholder={targetProduct!.name} type="text" required />
-          </Form.Control>
-        </Form.Field>
-        <Form.Field name={"productPhoto"}>
-          <Form.Label>Фото</Form.Label>
-          <Form.Message match="valueMissing">
-            Фставьте ссылку на фото товара
+            Введите наименование категории
           </Form.Message>
           <Form.Control asChild>
             <input type="text" required />
           </Form.Control>
         </Form.Field>
-        <Form.Field name={"productPrice"}>
-          <Form.Label>Цена товара</Form.Label>
-          <Form.Message match="valueMissing">Введите цену</Form.Message>
+        <Form.Field name={"productPhoto"}>
+          <Form.Label>Фото</Form.Label>
+          <Form.Message match="valueMissing">
+            Фставьте ссылку на фото категории
+          </Form.Message>
           <Form.Control asChild>
-            <input value={targetProduct!.price} type="text" required />
+            <input type="text" required />
           </Form.Control>
         </Form.Field>
-        <Form.Field name={"Category"}>
-          <Form.Label>Категория</Form.Label>
-          <Form.Message match="valueMissing">Выберите категорию</Form.Message>
-          <Form.Control asChild>
-            <select name="categoryName">
-              <option
-                value="category"
-                defaultValue={targetProduct!.category.name}
-              >
-                {targetProduct!.category.name}
-              </option>
-              {categories &&
-                categories.map((c) => {
-                  return (
-                    <option value={c.id} key={c.id}>
-                      {c.name}
-                    </option>
-                  );
-                })}
-            </select>
-          </Form.Control>
-        </Form.Field>
-        <Form.Submit asChild>
-          <Button>Сохранить</Button>
-        </Form.Submit>
+        <Flex justify="between">
+          <Form.Submit asChild>
+            <Button>Сохранить</Button>
+          </Form.Submit>
+          <Button>Отменить</Button>
+        </Flex>
       </Box>
     </Form.Root>
   );
@@ -106,7 +80,7 @@ export const ButtonEditCategory = (props: { categoryId: string }) => {
         <Button size="2">Редактировать</Button>
       </Dialog.Trigger>
       <Dialog.Content>
-        {loading ? <Loader /> : <FormEditProduct />}
+        {loading ? <Loader /> : <FormEditCategory />}
       </Dialog.Content>
     </Dialog.Root>
   );

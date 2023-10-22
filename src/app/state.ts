@@ -44,8 +44,8 @@ export const useProfileStore = create(
           token: state.token,
         }),
       },
-    ) /*,
-    { name: "Profile" },*/,
+    ),
+    { name: "Profile" },
   ),
 );
 
@@ -62,6 +62,7 @@ type ProductActions = {
   removeItemBucketById: (bucketId: string) => void;
   removeProductById: (productId: string) => void;
   setCategories: (arg0: Array<Category>) => void;
+  getCategoryById: (arg0: string) => void;
 };
 export const useProductStore = create(
   devtools(
@@ -112,6 +113,11 @@ export const useProductStore = create(
             ).map((str) => JSON.parse(str));
             state.categories = newCat;
           }),
+        getCategoryById: (categoryId: string) => {
+          const filteredCategory = () =>
+            get().categories?.find((c) => c.id === categoryId);
+          return get().categories?.length ? filteredCategory() : undefined;
+        },
       })),
       {
         name: `Product`,
@@ -119,28 +125,11 @@ export const useProductStore = create(
           bucket: state.bucket,
         }),
       },
-    ) /*,
+    ),
     {
       name: "Product",
-    },*/,
+    },
   ),
 );
 
-type RawProduct = {
-  rawProduct: {
-    id: number;
-    title: string;
-    description: string;
-    price: number;
-    discountPercentage: number;
-    rating: number;
-    stock: number;
-    brand: string;
-    category: string;
-    thumbnail: string;
-    images: string[];
-  };
-  setRawProduct: (p: RawProduct["rawProduct"]) => void;
-  getRawProductById: (id: number) => RawProduct["rawProduct"];
-};
 export const useRawProduct = create();

@@ -6,6 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useFetchCategories } from "../shared/api/getCategories.ts";
 import { ButtonEditCategory } from "../widgets/editCategories/editCategoriesForm.tsx";
+import { ButtonAddCategory } from "../widgets/editCategories/addCategoriesForm.tsx";
 
 export const CategoryPage = () => {
   const categories = useProductStore((state) => state.categories);
@@ -18,7 +19,7 @@ export const CategoryPage = () => {
 
   return (
     <div>
-      <h1>Страница редактирования товаров товаров</h1>
+      <h1>Страница управления категориями</h1>
 
       <Box>
         {categories ? (
@@ -30,6 +31,8 @@ export const CategoryPage = () => {
                 <Table.ColumnHeaderCell>Фото</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Создан</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Обновлен</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>Управление</Table.ColumnHeaderCell>
+                <Table.ColumnHeaderCell>Создать</Table.ColumnHeaderCell>
               </Table.Row>
             </Table.Header>
 
@@ -62,15 +65,25 @@ export const CategoryPage = () => {
 
                     <Table.Cell>
                       <Box>
-                        <Button color="red" size="2" my="2">
-                          Удалить
-                        </Button>
-                        <ButtonEditCategory categoryId={category.id} />
+                        <Box>
+                          <Button color="red" size="2" my="2">
+                            Удалить
+                          </Button>
+                        </Box>
+
+                        <Box>
+                          <ButtonEditCategory categoryId={category.id} />
+                        </Box>
                       </Box>
                     </Table.Cell>
                   </Table.Row>
                 );
               })}
+              <Table.Row>
+                <Table.Cell>
+                  <ButtonAddCategory />
+                </Table.Cell>
+              </Table.Row>
             </Table.Body>
           </Table.Root>
         ) : (
