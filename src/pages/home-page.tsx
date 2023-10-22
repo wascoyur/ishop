@@ -4,12 +4,14 @@ import Loader from "../widgets/loader/Loader.tsx";
 import { Badge, Button, Card, Dialog, Heading, Text } from "@radix-ui/themes";
 import "../shared/scss/product-card.scss";
 import { AddToCartComponent } from "../widgets/product/addToCartComponent.tsx";
+import { useFetchCategories } from "../shared/api/getCategories.ts";
 
 type homeProps = {
   children?: React.ReactNode;
 };
 export const HomePage = ({ children }: homeProps) => {
   useFetchProduct();
+  useFetchCategories();
   return (
     <>
       <h1>Домашняя страница</h1>

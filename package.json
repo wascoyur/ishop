@@ -12,6 +12,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@radix-ui/react-dialog": "^1.0.5",
+    "@radix-ui/react-form": "^0.0.3",
     "@radix-ui/themes": "^2.0.0",
     "@vitejs/plugin-basic-ssl": "^1.0.1",
     "classnames": "^2.3.2",

@@ -3,7 +3,7 @@ import ModalWindow from "../../features/modal/ModalWindow.tsx";
 import { useEffect, useState } from "react";
 import { useProfileStore } from "../../app/state.ts";
 import "../../shared/scss/profile-card.scss";
-import { Profile } from "../../entities/User.ts";
+import { Profile } from "../../entities/typesUser.ts";
 import { getProfile } from "../../shared/api/getProfile.ts";
 
 export const UserProfile = () => {

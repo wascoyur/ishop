@@ -49,6 +49,14 @@ export type AuthResult = {
   token: string;
 };
 export type BucketItem = { productId: string; count: number };
+export type Params = {
+  name: string;
+  photo?: string;
+  desc?: string;
+  oldPrice?: number;
+  price: number;
+  categoryId: string;
+};
 
 export enum ErrorCode {
   ERR_INCORRECT_EMAIL_OR_PASSWORD = "ERR_INCORRECT_EMAIL_OR_PASSWORD", // Если не корректный email или пароль
@@ -65,4 +73,5 @@ export enum ErrorCode {
   ERR_INVALID_QUERY_PARAMS = "ERR_INVALID_QUERY_PARAMS", // Все GET запросы могут принимать данные запроса в search params в формате { [key: string]: string // Нужно использовать JSON.stringify() }
 
   ERR_INTERNAL_SERVER = "ERR_INTERNAL_SERVER", // Серверная ошибка. Обратитесь ко мне, этой ошибки быть не должно
+  ERR_NETWORK_ERROR = "ERR_NETWORK_ERROR",
 }

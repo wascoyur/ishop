@@ -1,9 +1,11 @@
 import { Box, Button, Table } from "@radix-ui/themes";
+
 import { useProductStore, useProfileStore } from "../app/state.ts";
 import Loader from "../widgets/loader/Loader.tsx";
-import ModalWindow from "../features/modal/ModalWindow.tsx";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
+import { useFetchProduct } from "../shared/api/useFetchProduct.ts";
+import { ButtonEditProduct } from "../widgets/editProductForm/editProductForm.tsx";
 
 export const ProductsPage = () => {
   const [products, addProductToStore, removeProductById] = useProductStore(
@@ -15,6 +17,7 @@ export const ProductsPage = () => {
   );
   const isAuth = useProfileStore((state) => state.isUserAuth);
   const navigate = useNavigate();
+  useFetchProduct();
   useEffect(() => {
     !isAuth() && navigate("/profile");
   }, [isAuth]);
@@ -70,7 +73,7 @@ export const ProductsPage = () => {
                         <Button color="red" size="2" my="2">
                           Удалить
                         </Button>
-                        <Button size="2">Редактировать</Button>
+                        <ButtonEditProduct productId={p.id} />
                       </Box>
                     </Table.Cell>
                   </Table.Row>
@@ -79,9 +82,7 @@ export const ProductsPage = () => {
             </Table.Body>
           </Table.Root>
         ) : (
-          <ModalWindow visible={true}>
-            <Loader />
-          </ModalWindow>
+          <Loader />
         )}
       </Box>
     </div>

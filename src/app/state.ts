@@ -1,8 +1,8 @@
 import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { devtools, persist } from "zustand/middleware";
-import { Profile } from "../entities/User.ts";
-import { BucketItem, Product } from "../entities/types.ts";
+import { Profile } from "../entities/typesUser.ts";
+import { BucketItem, Category, Product } from "../entities/types.ts";
 
 type ProfileState = {
   token: string | null;
@@ -52,6 +52,7 @@ export const useProfileStore = create(
 type ProductStore = {
   products: Array<Product> | null;
   bucket: Array<BucketItem> | null;
+  categories: Array<Category> | null;
 };
 type ProductActions = {
   addToBucket: (bucketItem: BucketItem) => void;
@@ -60,6 +61,7 @@ type ProductActions = {
   getBucket: () => BucketItem[] | null;
   removeItemBucketById: (bucketId: string) => void;
   removeProductById: (productId: string) => void;
+  setCategories: (arg0: Array<Category>) => void;
 };
 export const useProductStore = create(
   devtools(
@@ -67,6 +69,7 @@ export const useProductStore = create(
       immer<ProductStore & ProductActions>((set, get) => ({
         products: null,
         bucket: null,
+        categories: null,
         addProductToStore: (product: Product[]) =>
           set((state) => {
             const currentProducts = state.products || [];
@@ -98,6 +101,11 @@ export const useProductStore = create(
               (item) => item.productId !== productId,
             );
             state.bucket = newBucket || state.bucket;
+          }),
+        setCategories: (categoies: Category[]) =>
+          set((state) => {
+            const currentCat = get().categories || new Array<Category>();
+            state.categories = [...currentCat, ...categoies];
           }),
       })),
       {
