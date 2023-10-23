@@ -133,6 +133,7 @@ export const useProductStore = create(
     ),
     {
       name: "Product",
+      anonymousActionType: "Product",
     },
   ),
 );
@@ -144,17 +145,20 @@ type ErrorActions = {
   setError: (arg0: ServerErrors) => void;
   clearErrors: () => void;
 };
-export const useErrors = create(
-  immer<ErrorStore & ErrorActions>((set) => ({
-    errors: undefined,
-    setError: (err: ServerErrors) =>
-      set((state) => {
-        state.errors = err;
-      }),
-    clearErrors: () => {
-      set(() => ({
-        errors: undefined,
-      }));
-    },
-  })),
+export const useErrorStore = create(
+  devtools(
+    immer<ErrorStore & ErrorActions>((set) => ({
+      errors: undefined,
+      setError: (err: ServerErrors) =>
+        set((state) => {
+          state.errors = err;
+        }),
+      clearErrors: () => {
+        set(() => ({
+          errors: undefined,
+        }));
+      },
+    })),
+    { name: "errors", anonymousActionType: "errors" },
+  ),
 );
