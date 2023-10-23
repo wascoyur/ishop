@@ -1,15 +1,23 @@
 import { Box, Button, Dialog, Text } from "@radix-ui/themes";
-import { useProductStore, useProfileStore } from "../../app/state.ts";
+import {
+  useErrorStore,
+  useProductStore,
+  useProfileStore,
+} from "../../app/state.ts";
 import { controlCategory } from "../../shared/api/controlCategory.ts";
 import { addCategoryParams } from "../../shared/api/apiTypes.ts";
 import "../../shared/common-form.scss";
 import { useState } from "react";
+import { ServerErrors } from "../../entities/types.ts";
 
 export const ButtonDeleteCategory = (props: { categoryId: string }) => {
   const token = useProfileStore((state) => state.token);
   const getCategoryById = useProductStore((state) => state.getCategoryById);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-
+  const [setError, errors] = useErrorStore((state) => [
+    state.setError,
+    state.errors,
+  ]);
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const updatedCategory: addCategoryParams = {
@@ -17,12 +25,19 @@ export const ButtonDeleteCategory = (props: { categoryId: string }) => {
       photo: "",
       token: token!,
     };
-    const { response, errors } = await controlCategory({
+    const result = await controlCategory({
       ...updatedCategory,
       id: props.categoryId,
       method: "DELETE",
     });
-    setIsDialogOpen(false);
+    if ("errors" in result) {
+      console.log(await result);
+      const errors = (await result) as ServerErrors;
+      setError(errors);
+      setIsDialogOpen(false);
+    } else {
+      setIsDialogOpen(false);
+    }
   };
   return (
     <Dialog.Root open={isDialogOpen}>
