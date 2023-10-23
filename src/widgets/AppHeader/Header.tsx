@@ -42,7 +42,7 @@ const Navigation: React.FC<NavigationProps> = ({ isMobileMenuOpen }) => {
         <NavLink to={`categories`}>Управление категориями</NavLink>
       )}
       <NavLink to={`bucket`}>Корзина</NavLink>
-      <NavLink to={`profile`}>Профиль</NavLink>
+      <NavLink to={`profile`}>{isUserAuth() ? `Профиль` : `Вход`}</NavLink>
     </ul>
   );
 };
