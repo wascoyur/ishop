@@ -67,7 +67,9 @@ export const ProductsPage = () => {
                     <Table.Cell>{dateCreated.toDateString()}</Table.Cell>
                     <Table.Cell>{datemodify.toDateString()}</Table.Cell>
                     <Table.Cell>{p.price} р.</Table.Cell>
-                    <Table.Cell>{p.category.name} р.</Table.Cell>
+                    <Table.Cell>
+                      {p.category?.name || "Неизвестно"} р.
+                    </Table.Cell>
                     <Table.Cell>
                       <Box>
                         <Button color="red" size="2" my="2">

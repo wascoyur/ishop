@@ -48,7 +48,7 @@ export const ProductCardList = () => {
               />
               <Text size="4">
                 <Heading as="h4">{item.name}</Heading>
-                <Text>Категория: {item.category.name}</Text>
+                <Text>Категория: {item?.category?.name || "Неизвестная"}</Text>
                 <Text as="p">{item.desc}</Text>
                 <Text>
                   <Badge variant="solid" color="indigo">

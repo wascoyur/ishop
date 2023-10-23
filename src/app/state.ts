@@ -62,7 +62,7 @@ type ProductActions = {
   removeItemBucketById: (bucketId: string) => void;
   removeProductById: (productId: string) => void;
   setCategories: (arg0: Array<Category>) => void;
-  getCategoryById: (arg0: string) => void;
+  getCategoryById: (arg0: string) => Category | undefined;
 };
 export const useProductStore = create(
   devtools(
