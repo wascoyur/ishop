@@ -1,83 +1,81 @@
 import { Box, Button, Dialog, Flex } from "@radix-ui/themes";
 import * as Form from "@radix-ui/react-form";
-import { useProductStore, useProfileStore } from "../../app/state.ts";
+import { useProfileStore } from "../../app/state.ts";
 import { FormEvent, useState } from "react";
-import { putProduct } from "../../shared/api/useProductPut.ts";
-import { Params } from "../../entities/types.ts";
 import Loader from "../loader/Loader.tsx";
+import { controlCategory } from "../../shared/api/controlCategory.ts";
+import { addCategoryParams } from "../../shared/api/apiTypes.ts";
 import * as Toast from "@radix-ui/react-toast";
+import "../../shared/common-form.scss";
 
 export const ButtonEditCategory = (props: { categoryId: string }) => {
-  const [getProductById, categories] = useProductStore((state) => [
-    state.getProductById,
-    state.categories,
-  ]);
   const [loading, setLoading] = useState<boolean>(false);
   const token = useProfileStore((state) => state.token);
-  const targetProduct = getProductById(props.categoryId);
-
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const handleSubmit = async (
     e: HTMLFormElement | FormEvent<HTMLFormElement>,
   ) => {
     e.preventDefault();
     const data = new FormData(e.target as HTMLFormElement);
-    const updatedProduct: Params = {
-      name: data.get("productName") as string,
-      photo: data.get("productPhoto") as string,
-      price: parseFloat(data.get("productPrice") as string),
-      categoryId: data.get("categoryName") as string,
-    };
-    console.log({ updatedProduct });
-    setLoading(true);
-    const { response, errors } = await putProduct({
+    const updatedCategory: addCategoryParams = {
+      name: data.get("categoryName") as string,
+      photo: data.get("categoryPhoto") as string,
       token: token!,
-      params: { ...updatedProduct, id: props.categoryId },
+    };
+    setLoading(true);
+    const { response, errors } = await controlCategory({
+      ...updatedCategory,
+      id: props.categoryId,
+      method: "PUT",
     });
     if (errors) {
       setLoading(false);
-      return (
-        <Toast.Root>
-          <Toast.Title>ошибка получения данных</Toast.Title>
-        </Toast.Root>
-      );
     } else if (response) {
-      return <Toast.Root></Toast.Root>;
+      setLoading(false);
     }
+
+    setDialogOpen(false);
   };
   const FormEditCategory = () => (
     <Form.Root onSubmit={(e) => handleSubmit(e)}>
-      <Box>
-        <Form.Field name={"productName"}>
-          <Form.Label>Наименование категории</Form.Label>
-          <Form.Message match="valueMissing">
-            Введите наименование категории
-          </Form.Message>
-          <Form.Control asChild>
-            <input type="text" required />
-          </Form.Control>
-        </Form.Field>
-        <Form.Field name={"productPhoto"}>
-          <Form.Label>Фото</Form.Label>
-          <Form.Message match="valueMissing">
-            Фставьте ссылку на фото категории
-          </Form.Message>
-          <Form.Control asChild>
-            <input type="text" required />
-          </Form.Control>
-        </Form.Field>
-        <Flex justify="between">
-          <Form.Submit asChild>
-            <Button>Сохранить</Button>
-          </Form.Submit>
-          <Button>Отменить</Button>
-        </Flex>
-      </Box>
+      <Toast.Provider>
+        <Box className="default-style">
+          <Form.Field name={"categoryName"} className="FormField">
+            <Form.Label>Наименование категории</Form.Label>
+            <Form.Message match="valueMissing">
+              Введите наименование категории
+            </Form.Message>
+            <Form.Control asChild>
+              <input type="text" required className="Input" />
+            </Form.Control>
+          </Form.Field>
+          <Form.Field name={"categoryPhoto"} className="FormField">
+            <Form.Label>Фото</Form.Label>
+            <Form.Message match="valueMissing">
+              Фставьте ссылку на фото категории
+            </Form.Message>
+            <Form.Control asChild>
+              <input type="text" required className="Input" />
+            </Form.Control>
+          </Form.Field>
+          <Flex justify="between">
+            <Form.Submit asChild>
+              <Button>Сохранить</Button>
+            </Form.Submit>
+            <Dialog.Close>
+              <Button onClick={() => setDialogOpen(false)}>Отменить</Button>
+            </Dialog.Close>
+          </Flex>
+        </Box>
+      </Toast.Provider>
     </Form.Root>
   );
   return (
-    <Dialog.Root>
+    <Dialog.Root open={dialogOpen}>
       <Dialog.Trigger>
-        <Button size="2">Редактировать</Button>
+        <Button size="2" onClick={() => setDialogOpen(true)}>
+          Редактировать
+        </Button>
       </Dialog.Trigger>
       <Dialog.Content>
         {loading ? <Loader /> : <FormEditCategory />}

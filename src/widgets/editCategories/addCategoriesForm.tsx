@@ -2,14 +2,16 @@ import { Box, Button, Dialog, Flex } from "@radix-ui/themes";
 import * as Form from "@radix-ui/react-form";
 import { useProfileStore } from "../../app/state.ts";
 import { FormEvent, useState } from "react";
-import { ServerErrors } from "../../entities/types.ts";
 import Loader from "../loader/Loader.tsx";
 import { getCategories } from "../../shared/api/getCategories.ts";
+import { addCategory } from "../../shared/api/addCategory.ts";
+import { addCategoryParams } from "../../shared/api/apiTypes.ts";
+import "../../shared/common-form.scss";
 
 export const ButtonAddCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const token = useProfileStore((state) => state.token);
-
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const handleSubmit = async (
     e: HTMLFormElement | FormEvent<HTMLFormElement>,
   ) => {
@@ -23,72 +25,44 @@ export const ButtonAddCategory = () => {
     setLoading(true);
     await addCategory(newCategory);
     await getCategories(token);
+    setIsDialogOpen(false);
+
     setLoading(false);
   };
-  const FormEditProduct = () => (
+  const FormAddCategory = () => (
     <Form.Root onSubmit={(e) => handleSubmit(e)}>
       <Flex>
         <h2>Добавление категории</h2>
       </Flex>
-      <Box>
-        <Form.Field name={"categoryName"}>
+      <Box className="default-style">
+        <Form.Field name={"categoryName"} className="FormField">
           <Form.Label>Наименование категории</Form.Label>
           <Form.Control asChild>
-            <input type="text" />
+            <input type="text" className="Input" />
           </Form.Control>
         </Form.Field>
-        <Form.Field name={"categoryPhoto"}>
+        <Form.Field name={"categoryPhoto"} className="FormField">
           <Form.Label>Фото категории</Form.Label>
           <Form.Control asChild>
-            <input type="text" />
+            <input type="url" name="url" id="url" className="Input" />
           </Form.Control>
         </Form.Field>
-        <Form.Submit asChild>
+        <Form.Submit asChild className="FormField">
           <Button>Сохранить</Button>
         </Form.Submit>
       </Box>
     </Form.Root>
   );
   return (
-    <Dialog.Root>
+    <Dialog.Root open={isDialogOpen}>
       <Dialog.Trigger>
-        <Button size="2">Добавить категорию</Button>
+        <Button size="2" onClick={() => setIsDialogOpen(true)}>
+          Добавить категорию
+        </Button>
       </Dialog.Trigger>
       <Dialog.Content>
-        {loading ? <Loader /> : <FormEditProduct />}
+        {loading ? <Loader /> : <FormAddCategory />}
       </Dialog.Content>
     </Dialog.Root>
   );
-};
-
-export const addCategory = async (props: addCategoryParams) => {
-  const ADD_CATEGORY = `https://19429ba06ff2.vps.myjino.ru/api/categories`;
-  try {
-    const response = await fetch(ADD_CATEGORY, {
-      method: `POST`,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${props.token}`,
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify({
-        name: props.name,
-        photo: props?.photo,
-      }),
-    });
-    if (response.ok) {
-      const category = await response.json();
-      return category;
-    } else {
-      const errors = (await response.json()) as ServerErrors;
-      return errors;
-    }
-  } catch (e) {
-    console.error(e);
-  }
-};
-type addCategoryParams = {
-  name: string;
-  photo?: string;
-  token: string;
 };

@@ -4,14 +4,17 @@ import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 
 export const BucketPage = () => {
-  const [bucket, getProductById, removeItemBucketById] = useProductStore(
-    (state) => [state.bucket, state.getProductById, state.removeItemBucketById],
-  );
   const isAuth = useProfileStore((state) => state.isUserAuth);
-  const navigate = useNavigate();
   useEffect(() => {
     !isAuth() && navigate("/profile");
   }, [isAuth]);
+  const [bucket, getProductById, removeItemBucketById] = useProductStore(
+    (state) => [state.bucket, state.getProductById, state.removeItemBucketById],
+  );
+  const navigate = useNavigate();
+
+  function handleOrder() {}
+
   return (
     <div>
       <h1>Корзина</h1>
@@ -68,6 +71,13 @@ export const BucketPage = () => {
                   </Table.Row>
                 );
               })}
+              <Table.Row>
+                <Table.Cell>
+                  <Button size="4" onClick={handleOrder}>
+                    Оформить заказ
+                  </Button>
+                </Table.Cell>
+              </Table.Row>
             </Table.Body>
           </Table.Root>
         ) : (
