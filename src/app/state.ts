@@ -2,7 +2,12 @@ import { create } from "zustand";
 import { immer } from "zustand/middleware/immer";
 import { devtools, persist } from "zustand/middleware";
 import { Profile } from "../entities/typesUser.ts";
-import { BucketItem, Category, Product } from "../entities/types.ts";
+import {
+  BucketItem,
+  Category,
+  Product,
+  ServerErrors,
+} from "../entities/types.ts";
 
 type ProfileState = {
   token: string | null;
@@ -132,4 +137,24 @@ export const useProductStore = create(
   ),
 );
 
-export const useRawProduct = create();
+type ErrorStore = {
+  errors: ServerErrors | undefined;
+};
+type ErrorActions = {
+  setError: (arg0: ServerErrors) => void;
+  clearErrors: () => void;
+};
+export const useErrors = create(
+  immer<ErrorStore & ErrorActions>((set) => ({
+    errors: undefined,
+    setError: (err: ServerErrors) =>
+      set((state) => {
+        state.errors = err;
+      }),
+    clearErrors: () => {
+      set(() => ({
+        errors: undefined,
+      }));
+    },
+  })),
+);
