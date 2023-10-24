@@ -41,13 +41,11 @@ export const CategoryPage = () => {
           <Table.Root>
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeaderCell>id</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Наименование</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Фото</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Создан</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Обновлен</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Управление</Table.ColumnHeaderCell>
-                <Table.ColumnHeaderCell>Создать</Table.ColumnHeaderCell>
               </Table.Row>
             </Table.Header>
 
@@ -57,9 +55,6 @@ export const CategoryPage = () => {
                 const datemodify = new Date(category.updatedAt);
                 return (
                   <Table.Row key={category.id + Math.random()}>
-                    <Table.Cell style={{ width: "3rem" }}>
-                      {category.id}
-                    </Table.Cell>
                     <Table.Cell width={2}>{category.name}</Table.Cell>
                     <Table.Cell justify="start">
                       {

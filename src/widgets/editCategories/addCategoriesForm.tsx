@@ -57,13 +57,16 @@ export const ButtonAddCategory = () => {
         <Form.Submit asChild className="FormField">
           <Button>Сохранить</Button>
         </Form.Submit>
+        <Dialog.Close>
+          <Button onClick={() => setIsDialogOpen(false)}>Отменить</Button>
+        </Dialog.Close>
       </Box>
     </Form.Root>
   );
   return (
     <Dialog.Root open={isDialogOpen}>
       <Dialog.Trigger>
-        <Button size="2" onClick={() => setIsDialogOpen(true)}>
+        <Button size="4" onClick={() => setIsDialogOpen(true)}>
           Добавить категорию
         </Button>
       </Dialog.Trigger>

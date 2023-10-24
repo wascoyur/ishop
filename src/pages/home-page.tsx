@@ -1,5 +1,5 @@
 import { useFetchProduct } from "../shared/api/useFetchProduct.ts";
-import { useProductStore } from "../app/state.ts";
+import { useProductStore, useProfileStore } from "../app/state.ts";
 import Loader from "../widgets/loader/Loader.tsx";
 import { Badge, Button, Card, Dialog, Heading, Text } from "@radix-ui/themes";
 import "../shared/scss/product-card.scss";
@@ -10,7 +10,8 @@ type homeProps = {
   children?: React.ReactNode;
 };
 export const HomePage = ({ children }: homeProps) => {
-  useFetchProduct();
+  const token = useProfileStore((state) => state.token);
+  useFetchProduct({ token });
   useFetchCategories();
   return (
     <>

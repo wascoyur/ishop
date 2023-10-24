@@ -1,11 +1,12 @@
 import { Box, Button, Table } from "@radix-ui/themes";
-
 import { useProductStore, useProfileStore } from "../app/state.ts";
 import Loader from "../widgets/loader/Loader.tsx";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { useFetchProduct } from "../shared/api/useFetchProduct.ts";
 import { ButtonEditProduct } from "../widgets/editProductForm/editProductForm.tsx";
+import { useFetchCategories } from "../shared/api/getCategories.ts";
+import "../shared/common-form.scss";
 
 export const ProductsPage = () => {
   const [products, addProductToStore, removeProductById] = useProductStore(
@@ -15,9 +16,13 @@ export const ProductsPage = () => {
       state.removeProductById,
     ],
   );
-  const isAuth = useProfileStore((state) => state.isUserAuth);
+  useFetchCategories();
+  const [isAuth, token] = useProfileStore((state) => [
+    state.isUserAuth,
+    state.token,
+  ]);
   const navigate = useNavigate();
-  useFetchProduct();
+  useFetchProduct({ token });
   useEffect(() => {
     !isAuth() && navigate("/profile");
   }, [isAuth]);
@@ -31,7 +36,6 @@ export const ProductsPage = () => {
           <Table.Root>
             <Table.Header>
               <Table.Row>
-                <Table.ColumnHeaderCell>id</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Наименование</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Фото</Table.ColumnHeaderCell>
                 <Table.ColumnHeaderCell>Создан</Table.ColumnHeaderCell>
@@ -48,7 +52,6 @@ export const ProductsPage = () => {
                 const datemodify = new Date(p.updatedAt);
                 return (
                   <Table.Row key={p.id + Math.random()}>
-                    <Table.Cell style={{ width: "3rem" }}>{p.id}</Table.Cell>
                     <Table.Cell width={2}>{p.name}</Table.Cell>
                     <Table.Cell justify="start">
                       {
@@ -72,10 +75,14 @@ export const ProductsPage = () => {
                     </Table.Cell>
                     <Table.Cell>
                       <Box>
-                        <Button color="red" size="2" my="2">
-                          Удалить
-                        </Button>
-                        <ButtonEditProduct productId={p.id} />
+                        <Box>
+                          <Button color="red" size="2" my="2">
+                            Удалить
+                          </Button>
+                        </Box>
+                        <Box>
+                          <ButtonEditProduct productId={p.id} />
+                        </Box>
                       </Box>
                     </Table.Cell>
                   </Table.Row>
