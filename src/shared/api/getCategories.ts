@@ -58,7 +58,8 @@ export const useFetchCategories = () => {
         const result = await getCategories(token);
 
         if ("data" in result) {
-          setCategories(result.data);
+          const data = await result.data;
+          setCategories(data);
         } else if ("errors" in result) {
           setErrors(result as ServerErrors);
         }
@@ -69,7 +70,7 @@ export const useFetchCategories = () => {
       }
     }
 
-    getCategoriesWrapper();
+    const res = getCategoriesWrapper();
   }, [token]);
   return { loading, errors };
 };

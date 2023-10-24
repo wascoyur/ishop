@@ -57,7 +57,7 @@ export const useProfileStore = create(
 type ProductStore = {
   products: Array<Product> | null;
   bucket: Array<BucketItem> | null;
-  categories: Array<Category> | null;
+  categories: Array<Category> | undefined;
 };
 type ProductActions = {
   addToBucket: (bucketItem: BucketItem) => void;
@@ -68,6 +68,7 @@ type ProductActions = {
   removeProductById: (productId: string) => void;
   setCategories: (arg0: Array<Category>) => void;
   getCategoryById: (arg0: string) => Category | undefined;
+  removeCategoryById: (arg0: string) => void;
 };
 export const useProductStore = create(
   devtools(
@@ -75,7 +76,7 @@ export const useProductStore = create(
       immer<ProductStore & ProductActions>((set, get) => ({
         products: null,
         bucket: null,
-        categories: null,
+        categories: undefined,
         addProductToStore: (product: Product[]) =>
           set((state) => {
             const currentProducts = state.products || [];
@@ -123,6 +124,12 @@ export const useProductStore = create(
             get().categories?.find((c) => c.id === categoryId);
           return get().categories?.length ? filteredCategory() : undefined;
         },
+        removeCategoryById: (categoryId: string) =>
+          set((state) => {
+            state.categories = state.categories?.filter(
+              (item) => item.id !== categoryId,
+            );
+          }),
       })),
       {
         name: `Product`,

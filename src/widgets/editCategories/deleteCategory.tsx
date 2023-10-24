@@ -12,7 +12,10 @@ import { ServerErrors } from "../../entities/types.ts";
 
 export const ButtonDeleteCategory = (props: { categoryId: string }) => {
   const token = useProfileStore((state) => state.token);
-  const getCategoryById = useProductStore((state) => state.getCategoryById);
+  const [getCategoryById, removeCategoryById] = useProductStore((state) => [
+    state.getCategoryById,
+    state.removeCategoryById,
+  ]);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [setError, errors] = useErrorStore((state) => [
     state.setError,
@@ -35,7 +38,8 @@ export const ButtonDeleteCategory = (props: { categoryId: string }) => {
       const errors = (await result) as ServerErrors;
       setError(errors);
       setIsDialogOpen(false);
-    } else {
+    } else if ("id" in result && result["id"] === String(props.categoryId)) {
+      removeCategoryById(result["id"]);
       setIsDialogOpen(false);
     }
   };
