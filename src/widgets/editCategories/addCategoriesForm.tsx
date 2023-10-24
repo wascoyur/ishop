@@ -1,17 +1,22 @@
 import { Box, Button, Dialog, Flex } from "@radix-ui/themes";
 import * as Form from "@radix-ui/react-form";
-import { useProfileStore } from "../../app/state.ts";
+import { useProductStore, useProfileStore } from "../../app/state.ts";
 import { FormEvent, useState } from "react";
 import Loader from "../loader/Loader.tsx";
-import { getCategories } from "../../shared/api/getCategories.ts";
 import { addCategory } from "../../shared/api/addCategory.ts";
 import { addCategoryParams } from "../../shared/api/apiTypes.ts";
 import "../../shared/common-form.scss";
+import { useFetchCategories } from "../../shared/api/getCategories.ts";
 
 export const ButtonAddCategory = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const token = useProfileStore((state) => state.token);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [categories, setCategories] = useProductStore((state) => [
+    state.categories,
+    state.setCategories,
+  ]);
+  const { loading: loadingCat, errors } = useFetchCategories();
   const handleSubmit = async (
     e: HTMLFormElement | FormEvent<HTMLFormElement>,
   ) => {
@@ -23,11 +28,13 @@ export const ButtonAddCategory = () => {
       photo: data.get("categoryPhoto") as string,
     };
     setLoading(true);
-    await addCategory(newCategory);
-    await getCategories(token);
-    setIsDialogOpen(false);
+    const result = await addCategory(newCategory);
+    if ("id" in result) {
+      setCategories([result]);
+      setLoading(false);
 
-    setLoading(false);
+      setIsDialogOpen(false);
+    }
   };
   const FormAddCategory = () => (
     <Form.Root onSubmit={(e) => handleSubmit(e)}>

@@ -18,8 +18,12 @@ export const CategoryPage = () => {
   const isAuth = useProfileStore((state) => state.isUserAuth);
   const navigate = useNavigate();
   useFetchCategories();
+
   useEffect(() => {
     !isAuth() && navigate("/profile");
+    return () => {
+      clearErrors();
+    };
   }, [isAuth]);
   const [errors, clearErrors] = useErrorStore((state) => [
     state.errors,
