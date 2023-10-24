@@ -1,11 +1,10 @@
-import { Box, Button, Dialog } from "@radix-ui/themes";
+import { Box, Button, Dialog, Flex } from "@radix-ui/themes";
 import * as Form from "@radix-ui/react-form";
 import { useProductStore, useProfileStore } from "../../app/state.ts";
 import { FormEvent, useState } from "react";
 import { putProduct } from "../../shared/api/useProductPut.ts";
-import { Params } from "../../entities/types.ts";
+import { Params, Product } from "../../entities/types.ts";
 import Loader from "../loader/Loader.tsx";
-import * as Toast from "@radix-ui/react-toast";
 
 export const ButtonEditProduct = (props: { productId: string }) => {
   const [getProductById, categories] = useProductStore((state) => [
@@ -15,6 +14,7 @@ export const ButtonEditProduct = (props: { productId: string }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const token = useProfileStore((state) => state.token);
   const targetProduct = getProductById(props.productId);
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const handleSubmit = async (
     e: HTMLFormElement | FormEvent<HTMLFormElement>,
@@ -35,53 +35,67 @@ export const ButtonEditProduct = (props: { productId: string }) => {
     });
     if (errors) {
       setLoading(false);
-      return (
-        <Toast.Root>
-          <Toast.Title>ошибка получения данных</Toast.Title>
-        </Toast.Root>
-      );
     } else if (response) {
-      return <Toast.Root></Toast.Root>;
+      setLoading(false);
     }
   };
-  const FormEditProduct = () => (
+  const FormEditProduct = (props: { product: Product | undefined }) => (
     <Form.Root onSubmit={(e) => handleSubmit(e)}>
-      <Box>
-        <Form.Field name={"productName"}>
+      <Box className="default-style">
+        <Form.Field name={"productName"} className="FormField">
           <Form.Label>Наименование продукта</Form.Label>
           <Form.Message match="valueMissing">
             Введите наименование товара
           </Form.Message>
           <Form.Control asChild>
-            <input placeholder={targetProduct!.name} type="text" required />
+            <input
+              placeholder={props?.product?.name || "Неизвестно"}
+              type="text"
+              required
+              className="Input"
+            />
           </Form.Control>
         </Form.Field>
-        <Form.Field name={"productPhoto"}>
+        <Form.Field
+          name="productPhoto"
+          placeholder={props?.product?.photo || "Неизвестно"}
+          className="FormField"
+        >
           <Form.Label>Фото</Form.Label>
           <Form.Message match="valueMissing">
             Фставьте ссылку на фото товара
           </Form.Message>
           <Form.Control asChild>
-            <input type="text" required />
+            <input
+              placeholder={props?.product?.name || "Неизвестно"}
+              type="text"
+              required
+              className="Input"
+            />
           </Form.Control>
         </Form.Field>
-        <Form.Field name={"productPrice"}>
+        <Form.Field name={"productPrice"} className="FormField">
           <Form.Label>Цена товара</Form.Label>
           <Form.Message match="valueMissing">Введите цену</Form.Message>
           <Form.Control asChild>
-            <input value={targetProduct!.price} type="text" required />
+            <input
+              placeholder={String(props?.product?.price) || "Неизвестно"}
+              type="number"
+              required
+              className="Input"
+            />
           </Form.Control>
         </Form.Field>
-        <Form.Field name={"Category"}>
+        <Form.Field name={"Category"} className="FormField">
           <Form.Label>Категория</Form.Label>
           <Form.Message match="valueMissing">Выберите категорию</Form.Message>
           <Form.Control asChild>
-            <select name="categoryName">
+            <select name="categoryName" className="Input">
               <option
                 value="category"
-                defaultValue={targetProduct!.category.name}
+                defaultValue={props.product?.category?.name || "Неизвестно"}
               >
-                {targetProduct!.category.name}
+                {props.product?.category?.name || "Неизвестно"}
               </option>
               {categories &&
                 categories.map((c) => {
@@ -94,19 +108,26 @@ export const ButtonEditProduct = (props: { productId: string }) => {
             </select>
           </Form.Control>
         </Form.Field>
-        <Form.Submit asChild>
-          <Button>Сохранить</Button>
-        </Form.Submit>
+        <Flex>
+          <Form.Submit asChild>
+            <Button>Сохранить</Button>
+          </Form.Submit>
+          <Dialog.Close>
+            <Button onClick={() => setDialogOpen(false)}>Отменить</Button>
+          </Dialog.Close>
+        </Flex>
       </Box>
     </Form.Root>
   );
   return (
-    <Dialog.Root>
+    <Dialog.Root open={dialogOpen}>
       <Dialog.Trigger>
-        <Button size="2">Редактировать</Button>
+        <Button size="2" onClick={() => setDialogOpen(true)}>
+          Редактировать
+        </Button>
       </Dialog.Trigger>
       <Dialog.Content>
-        {loading ? <Loader /> : <FormEditProduct />}
+        {loading ? <Loader /> : <FormEditProduct product={targetProduct} />}
       </Dialog.Content>
     </Dialog.Root>
   );

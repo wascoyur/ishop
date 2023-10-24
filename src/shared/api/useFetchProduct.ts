@@ -2,11 +2,14 @@ import { useState } from "react";
 import { useProductStore } from "../../app/state.ts";
 import { Pagination, Product, Sorting } from "../../entities/types.ts";
 
-export const useFetchProduct = async () => {
+export const useFetchProduct = async (props: { token: string | null }) => {
   const [setProducts, products] = useProductStore((state) => [
     state.addProductToStore,
     state.products,
   ]);
+  const authorization = props?.token
+    ? { Authorization: `Bearer ${props.token}` }
+    : undefined;
   const PRODUCTS = `https://19429ba06ff2.vps.myjino.ru/api/products`;
   const [loading, setLoading] = useState<boolean>(true);
   if (!products) {
@@ -15,6 +18,8 @@ export const useFetchProduct = async () => {
         method: `GET`,
         headers: {
           "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+          ...authorization,
         },
       });
       const result = await response.json();
