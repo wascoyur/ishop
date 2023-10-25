@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useProfileStore } from "../../app/state.ts";
 import { ServerErrors } from "../../entities/types.ts";
 import Loader from "../loader/Loader.tsx";
+import { Button } from "@radix-ui/themes";
 
 export const RegisterForm = () => {
   const token = useProfileStore((state) => state.token);
@@ -14,7 +15,7 @@ export const RegisterForm = () => {
   const { error, loading } = useAuthSignUp(data);
   const navigate = useNavigate();
   useEffect(() => {
-    token && navigate("/home");
+    token && navigate("/");
   }, [token]);
   const handleLogInUser = async (e: FormEvent) => {
     e.preventDefault();
@@ -47,9 +48,9 @@ export const RegisterForm = () => {
               {error?.errors[0].message}
             </strong>
           )}
-          <button type={"submit"} disabled={false}>
+          <Button type={"submit"} disabled={false}>
             Войти
-          </button>
+          </Button>
         </form>
       )}
     </div>
@@ -70,6 +71,7 @@ const useAuthSignUp = (props: Auth) => {
     state.isUserAuth,
   ]);
   const [error, setError] = useState<ServerErrors>();
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function auth() {
@@ -87,11 +89,11 @@ const useAuthSignUp = (props: Auth) => {
         } else {
           if (answer) {
             const errors = await answer.json();
-
             setError(errors);
           }
         }
         setLoading(false);
+        navigate("/");
       } catch (err) {
         setLoading(false);
       }
