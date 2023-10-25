@@ -72,72 +72,65 @@ type ProductActions = {
 };
 export const useProductStore = create(
   devtools(
-    persist(
-      immer<ProductStore & ProductActions>((set, get) => ({
-        products: null,
-        bucket: null,
-        categories: undefined,
-        addProductToStore: (product: Product[]) =>
-          set((state) => {
-            const currentProducts = state.products || [];
-            state.products = [...currentProducts, ...product];
-          }),
-        addToBucket: (bucketItem: BucketItem) =>
-          set((state) => {
-            const currentBucket = state.bucket || [];
-            state.bucket = [...currentBucket, bucketItem];
-          }),
-        getProductById: (idProduct: string) => {
-          const filteredItem = () =>
-            get().products?.find((p) => p.id === idProduct);
-          return get().products?.length ? filteredItem() : undefined;
-        },
-        getBucket: () => {
-          return get().bucket;
-        },
-        removeItemBucketById: (bucketId: string) =>
-          set((state) => {
-            const newBucket = get().bucket?.filter(
-              (item) => item.productId !== bucketId,
-            );
-            state.bucket = newBucket || state.bucket;
-          }),
-        removeProductById: (productId: string) =>
-          set((state) => {
-            const newBucket = get().bucket?.filter(
-              (item) => item.productId !== productId,
-            );
-            state.bucket = newBucket || state.bucket;
-          }),
-        setCategories: (categories: Category[]) =>
-          set((state) => {
-            const currentCat = state.categories || new Array<Category>();
-            const newCat: Category[] = Array.from(
-              new Set(
-                [...currentCat, ...categories].map((c) => JSON.stringify(c)),
-              ),
-            ).map((str) => JSON.parse(str));
-            state.categories = newCat;
-          }),
-        getCategoryById: (categoryId: string) => {
-          const filteredCategory = () =>
-            get().categories?.find((c) => c.id === categoryId);
-          return get().categories?.length ? filteredCategory() : undefined;
-        },
-        removeCategoryById: (categoryId: string) =>
-          set((state) => {
-            state.categories = state.categories?.filter(
-              (item) => item.id !== categoryId,
-            );
-          }),
-      })),
-      {
-        name: `Product`,
-        partialize: (state) => ({
-          bucket: state.bucket,
+    immer<ProductStore & ProductActions>((set, get) => ({
+      products: null,
+      bucket: null,
+      categories: undefined,
+      addProductToStore: (product: Product[]) =>
+        set((state) => {
+          const currentProducts = state.products || [];
+          state.products = [...currentProducts, ...product];
         }),
+      addToBucket: (bucketItem: BucketItem) =>
+        set((state) => {
+          const currentBucket = state.bucket || [];
+          state.bucket = [...currentBucket, bucketItem];
+        }),
+      getProductById: (idProduct: string) => {
+        const filteredItem = () =>
+          get().products?.find((p) => p.id === idProduct);
+        return get().products?.length ? filteredItem() : undefined;
       },
-    ),
+      getBucket: () => {
+        return get().bucket;
+      },
+      removeItemBucketById: (bucketId: string) =>
+        set((state) => {
+          const newBucket = get().bucket?.filter(
+            (item) => item.productId !== bucketId,
+          );
+          state.bucket = newBucket || state.bucket;
+        }),
+      removeProductById: (productId: string) =>
+        set((state) => {
+          const newBucket = get().bucket?.filter(
+            (item) => item.productId !== productId,
+          );
+          state.bucket = newBucket || state.bucket;
+        }),
+      setCategories: (categories: Category[]) =>
+        set((state) => {
+          const currentCat = state.categories || new Array<Category>();
+          const newCat: Category[] = Array.from(
+            new Set(
+              [...currentCat, ...categories].map((c) => JSON.stringify(c)),
+            ),
+          ).map((str) => JSON.parse(str));
+          state.categories = newCat;
+        }),
+      getCategoryById: (categoryId: string) => {
+        const filteredCategory = () =>
+          get().categories?.find((c) => c.id === categoryId);
+        return get().categories?.length ? filteredCategory() : undefined;
+      },
+      removeCategoryById: (categoryId: string) =>
+        set((state) => {
+          state.categories = state.categories?.filter(
+            (item) => item.id !== categoryId,
+          );
+        }),
+    })),
+
     {
       name: "Product",
       anonymousActionType: "Product",
