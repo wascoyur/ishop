@@ -16,7 +16,3 @@ export type Profile = {
   about?: string;
   signUpDate: string;
 };
-export type typeUserProfileCardProps = {
-  user: Profile;
-  onEditProfile: () => void;
-};

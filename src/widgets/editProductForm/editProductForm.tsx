@@ -67,7 +67,7 @@ export const ButtonEditProduct = (props: { productId: string }) => {
           </Form.Message>
           <Form.Control asChild>
             <input
-              placeholder={props?.product?.name || "Неизвестно"}
+              placeholder={props?.product?.photo || "Неизвестно"}
               type="text"
               required
               className="Input"

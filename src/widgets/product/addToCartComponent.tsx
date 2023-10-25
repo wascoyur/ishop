@@ -70,7 +70,7 @@ export const AddToCartComponent = (props: { productId: string }) => {
                 onClick={() =>
                   addToBucket({
                     productId: props.productId,
-                    count: countProduct,
+                    quantity: countProduct,
                   })
                 }
               >

@@ -1,4 +1,4 @@
-import { Box, Button, Table } from "@radix-ui/themes";
+import { Box, Table } from "@radix-ui/themes";
 import { useProductStore, useProfileStore } from "../app/state.ts";
 import Loader from "../widgets/loader/Loader.tsx";
 import { useNavigate } from "react-router-dom";
@@ -7,15 +7,10 @@ import { useFetchProduct } from "../shared/api/useFetchProduct.ts";
 import { ButtonEditProduct } from "../widgets/editProductForm/editProductForm.tsx";
 import { useFetchCategories } from "../shared/api/getCategories.ts";
 import "../shared/common-form.scss";
+import { ButtonDeleteProduct } from "../widgets/editProductForm/deleteProductButton.tsx";
 
 export const ProductsPage = () => {
-  const [products, addProductToStore, removeProductById] = useProductStore(
-    (state) => [
-      state.products,
-      state.addProductToStore,
-      state.removeProductById,
-    ],
-  );
+  const [products] = useProductStore((state) => [state.products]);
   useFetchCategories();
   const [isAuth, token] = useProfileStore((state) => [
     state.isUserAuth,
@@ -29,7 +24,7 @@ export const ProductsPage = () => {
 
   return (
     <div>
-      <h1>Страница редактирования товаров товаров</h1>
+      <h1>Страница редактирования товаров</h1>
 
       <Box>
         {products ? (
@@ -76,9 +71,7 @@ export const ProductsPage = () => {
                     <Table.Cell>
                       <Box>
                         <Box>
-                          <Button color="red" size="2" my="2">
-                            Удалить
-                          </Button>
+                          <ButtonDeleteProduct productId={p.id} />
                         </Box>
                         <Box>
                           <ButtonEditProduct productId={p.id} />
