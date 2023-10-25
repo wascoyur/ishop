@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react";
-import { useProfileStore } from "../../app/state.ts";
 import { Params, Product } from "../../entities/types.ts";
+import { OPERATION } from "./apiTypes.ts";
 
 export const putProduct = async (props: {
   token?: string;
@@ -40,36 +39,33 @@ export const putProduct = async (props: {
   }
 };
 
-export const PutProduct = (
-  props: (Params & Pick<Product, "id">) | undefined,
+export const deleteProduct = async (
+  props: {
+    id: string;
+    token: string;
+  } & OPERATION,
 ) => {
-  const token = useProfileStore((state) => state.token);
-  const [errors, setErrors] = useState(undefined);
-  const [response, setResponse] = useState(undefined);
-  const [loading, setLoading] = useState(false);
-  const data: Params & Pick<Product, "id"> = {
-    name: props!.name,
-    photo: props!.photo,
-    price: props!.price,
-    oldPrice: props!.oldPrice,
-    desc: props?.desc,
-    categoryId: props!.categoryId,
-    id: props!.id,
-  };
+  const { id, token } = props;
+  const DEL_PRODUCT = `https://19429ba06ff2.vps.myjino.ru/api/products/${id}`;
 
-  useEffect(() => {
-    if (props?.id) {
-      setLoading(true);
-      putProduct({ params: data, token: token! }).then((result) => {
-        if (result.response) {
-          setResponse(result.response);
-        } else {
-          setErrors(result.errors);
-        }
-        setLoading(false);
-      });
+  try {
+    const result = await fetch(DEL_PRODUCT, {
+      method: props.method,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (result.ok) {
+      const deleteProduct = await result.json();
+      return await deleteProduct;
+    } else {
+      const errorData = await result.json();
+      return { response: undefined, errors: errorData };
     }
-  }, [token, props]);
-
-  return { errors, response, loading };
+  } catch (e) {
+    console.error(e);
+    return { response: undefined, errors: "An error occurred." };
+  }
 };

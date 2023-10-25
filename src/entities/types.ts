@@ -17,12 +17,6 @@ export type Category = {
   updatedAt: Date;
 };
 
-export type OrderProduct = {
-  _id: string; // служебный id - это не id продукта
-  product: Product;
-  quantity: number;
-};
-
 export type Pagination = {
   pageSize?: number;
   pageNumber?: number;
@@ -48,7 +42,7 @@ export type ServerErrors = {
 export type AuthResult = {
   token: string;
 };
-export type BucketItem = { productId: string; count: number };
+export type BucketItem = { productId: string; quantity: number };
 export type Params = {
   name: string;
   photo?: string;

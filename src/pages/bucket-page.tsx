@@ -5,6 +5,8 @@ import { useEffect } from "react";
 import Loader from "../widgets/loader/Loader.tsx";
 import { useFetchProduct } from "../shared/api/useFetchProduct.ts";
 import { BucketItem, Product } from "../entities/types.ts";
+import { OrderStatus } from "../entities/typeOrders.ts";
+import { controlOrder } from "../shared/api/controlOrder.ts";
 
 export const BucketPage = () => {
   const [isAuth, token] = useProfileStore((state) => [
@@ -12,11 +14,11 @@ export const BucketPage = () => {
     state.token,
   ]);
   const navigate = useNavigate(); // Перемещено сюда
+  useFetchProduct({ token });
 
   useEffect(() => {
     !isAuth() && navigate("/profile");
   }, [isAuth]);
-  useFetchProduct({ token });
   const [bucket, getProductById, removeItemBucketById, products] =
     useProductStore((state) => [
       state.bucket,
@@ -25,7 +27,18 @@ export const BucketPage = () => {
       state.products,
     ]);
 
-  function handleOrder() {}
+  async function handleOrder() {
+    const products = bucket!.map((item) => ({
+      id: item.productId,
+      quantity: item.quantity,
+    }));
+    const result = await controlOrder({
+      products: products,
+      method: "POST",
+      token: token!,
+      status: OrderStatus.Processing,
+    });
+  }
 
   const totalPay = (
     arr: BucketItem[],
@@ -34,7 +47,7 @@ export const BucketPage = () => {
     return arr.reduce((acc, item) => {
       const p = getProductById(item.productId);
       if (p) {
-        return acc + p.price * item.count;
+        return acc + p.price * item.quantity;
       }
       return acc;
     }, 0);
@@ -61,8 +74,6 @@ export const BucketPage = () => {
               {products ? (
                 bucket.map((item) => {
                   const p = getProductById(item.productId)!;
-                  const dateCreated = new Date(p.createdAt) || new Date();
-                  const datemodify = new Date(p.updatedAt) || new Date();
                   return p ? (
                     <Table.Row key={p.id + Math.random()}>
                       <Table.Cell width={2}>{p.name}</Table.Cell>
@@ -82,8 +93,8 @@ export const BucketPage = () => {
                         {p?.category?.name || "Неизвестно"}
                       </Table.Cell>
                       <Table.Cell>{p.price} р.</Table.Cell>
-                      <Table.Cell>{item.count} шт</Table.Cell>
-                      <Table.Cell>{item.count * p.price}р.</Table.Cell>
+                      <Table.Cell>{item.quantity} шт</Table.Cell>
+                      <Table.Cell>{item.quantity * p.price}р.</Table.Cell>
                       <Table.Cell>
                         <Button
                           color="indigo"
