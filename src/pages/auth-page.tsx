@@ -1,6 +1,7 @@
 import { useProfileStore } from "../app/state.ts";
 import { UserProfile } from "../widgets/UserProfile/UserProfile.tsx";
 import { LoginForm } from "../widgets/UserProfile/LoginForm.tsx";
+import { Button } from "@radix-ui/themes";
 
 export const AuthPage = () => {
   const [isUserAuth, clearToken] = useProfileStore((state) => [
@@ -18,7 +19,9 @@ export const AuthPage = () => {
         <>
           <UserProfile />
           <div className="default-style">
-            <button onClick={clearToken}>Выйти из профиля</button>
+            <Button size="4" onClick={clearToken}>
+              Выйти из профиля
+            </Button>
           </div>
         </>
       ) : (

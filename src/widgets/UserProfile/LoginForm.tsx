@@ -6,6 +6,7 @@ import { Auth } from "../../shared/api/apiTypes.ts";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuthSignIn } from "../../shared/api/useSinIn.ts";
 import { ServerErrors } from "../../entities/types.ts";
+import { Button } from "@radix-ui/themes";
 
 export const LoginForm = () => {
   const token = useProfileStore((state) => state.token);
@@ -57,9 +58,9 @@ export const LoginForm = () => {
             </strong>
           )}
           <NavLink to={"/register"}>Зарегистрироваться</NavLink>
-          <button type={"submit"} disabled={!login || !password}>
+          <Button type={"submit"} disabled={!login || !password}>
             Войти
-          </button>
+          </Button>
         </form>
       )}
     </div>
