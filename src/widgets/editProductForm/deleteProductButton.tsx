@@ -1,9 +1,13 @@
 import { Box, Button, Dialog, Flex } from "@radix-ui/themes";
-import * as Form from "@radix-ui/react-form";
-import { useProductStore, useProfileStore } from "../../app/state.ts";
-import { FormEvent, useState } from "react";
+import {
+  useErrorStore,
+  useProductStore,
+  useProfileStore,
+} from "../../app/state.ts";
+import { useState } from "react";
 import { deleteProduct } from "../../shared/api/useProductPut.ts";
 import Loader from "../loader/Loader.tsx";
+import { ServerErrors } from "../../entities/types.ts";
 
 export const ButtonDeleteProduct = (props: { productId: string }) => {
   const [getProductById, categories] = useProductStore((state) => [
@@ -12,9 +16,9 @@ export const ButtonDeleteProduct = (props: { productId: string }) => {
   ]);
   const token = useProfileStore((state) => state.token);
   const [loading, setLoading] = useState<boolean>(false);
-  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
-
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [setError] = useErrorStore((state) => [state.setError]);
+  const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setLoading(true);
     const result = await deleteProduct({
@@ -22,33 +26,35 @@ export const ButtonDeleteProduct = (props: { productId: string }) => {
       id: props.productId,
       method: "DELETE",
     });
-    console.log(await result);
-    setDialogOpen(false);
+    if ("errors" in result) {
+      const resErrors = await result;
+      console.log(resErrors);
+      setError(resErrors.errors as ServerErrors);
+      setIsDialogOpen(false);
+    } /*if ("id" in result && result["id"] === String(props.categoryId))*/ else {
+      /*removeCategoryById(result["id"]);*/
+      setIsDialogOpen(false);
+    }
+    // console.log(await result);
   };
   const FormDeleteProduct = () => (
-    <Form.Root onSubmit={(e) => handleSubmit(e)}>
-      <Box className="default-style">
-        <Flex>
-          <Box>
-            Удалить {getProductById(props.productId)?.name || "Ошибка"}?
-          </Box>
-          <Box>
-            <Form.Submit asChild>
-              <Button>Удалить</Button>
-            </Form.Submit>
-          </Box>
-          <Dialog.Close>
-            <Button onClick={() => setDialogOpen(false)}>Отменить</Button>
-          </Dialog.Close>
-        </Flex>
-      </Box>
-    </Form.Root>
+    <Box className="default-style">
+      <Flex justify="center">
+        <Box>Удалить {getProductById(props.productId)?.name || "Ошибка"}?</Box>
+        <Box>
+          <Button onClick={(e) => handleSubmit(e)}>Удалить</Button>
+        </Box>
+        <Dialog.Close>
+          <Button onClick={() => setIsDialogOpen(false)}>Отменить</Button>
+        </Dialog.Close>
+      </Flex>
+    </Box>
   );
   return (
-    <Dialog.Root open={dialogOpen}>
+    <Dialog.Root open={isDialogOpen}>
       <Dialog.Trigger>
         <Box my="2">
-          <Button size="2" color="red" onClick={() => setDialogOpen(true)}>
+          <Button size="2" color="red" onClick={() => setIsDialogOpen(true)}>
             Удалить
           </Button>
         </Box>

@@ -9,16 +9,18 @@ import {
 } from "../../entities/types.ts";
 
 export const getCategories = async (
-  token: string | null,
+  token: string | undefined,
 ): Promise<ApiCategoriesResponse | ServerErrors> => {
   const GET_CATEGORIES = `https://19429ba06ff2.vps.myjino.ru/api/categories`;
-
+  const authorization = token
+    ? { Authorization: `Bearer ${token}` }
+    : undefined;
   try {
     const categories = await fetch(GET_CATEGORIES, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
+        ...authorization,
         "Access-Control-Allow-Origin": "*",
       },
     });

@@ -10,7 +10,7 @@ import {
 } from "../entities/types.ts";
 
 type ProfileState = {
-  token: string | null;
+  token: string | undefined;
   user: Profile | null;
 };
 type ProfileAction = {
@@ -23,9 +23,10 @@ export const useProfileStore = create(
   devtools(
     persist(
       immer<ProfileState & ProfileAction>((set, get) => ({
-        token: null,
+        token: undefined,
         user: null,
-        setToken: (newToken: string | null) => set(() => ({ token: newToken })),
+        setToken: (newToken: string | undefined) =>
+          set(() => ({ token: newToken })),
         clearToken: () =>
           set(() => ({
             token: null,

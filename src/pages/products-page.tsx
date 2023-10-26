@@ -1,5 +1,9 @@
 import { Box, Table } from "@radix-ui/themes";
-import { useProductStore, useProfileStore } from "../app/state.ts";
+import {
+  useErrorStore,
+  useProductStore,
+  useProfileStore,
+} from "../app/state.ts";
 import Loader from "../widgets/loader/Loader.tsx";
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
@@ -8,6 +12,7 @@ import { ButtonEditProduct } from "../widgets/editProductForm/editProductForm.ts
 import { useFetchCategories } from "../shared/api/getCategories.ts";
 import "../shared/common-form.scss";
 import { ButtonDeleteProduct } from "../widgets/editProductForm/deleteProductButton.tsx";
+import ToastErrors from "../widgets/Notify/Toast.tsx";
 
 export const ProductsPage = () => {
   const [products] = useProductStore((state) => [state.products]);
@@ -17,6 +22,10 @@ export const ProductsPage = () => {
     state.token,
   ]);
   const navigate = useNavigate();
+  const [errors, clearErrors] = useErrorStore((state) => [
+    state.errors,
+    state.clearErrors,
+  ]);
   useFetchProduct({ token });
   useEffect(() => {
     !isAuth() && navigate("/profile");
@@ -25,6 +34,7 @@ export const ProductsPage = () => {
   return (
     <div>
       <h1>Страница редактирования товаров</h1>
+      {errors && <ToastErrors errorMessage={errors.errors[0].message} />}
 
       <Box>
         {products ? (

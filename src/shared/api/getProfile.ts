@@ -1,4 +1,4 @@
-export const getProfile = async (token: string | null) => {
+export const getProfile = async (token: string | undefined) => {
   const GET_PROFILE = `https://19429ba06ff2.vps.myjino.ru/api/profile`;
 
   try {

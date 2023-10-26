@@ -34,7 +34,6 @@ export const ButtonDeleteCategory = (props: { categoryId: string }) => {
       method: "DELETE",
     });
     if ("errors" in result) {
-      console.log(await result);
       const errors = (await result) as ServerErrors;
       setError(errors);
       setIsDialogOpen(false);

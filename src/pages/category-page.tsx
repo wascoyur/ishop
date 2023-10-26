@@ -32,9 +32,7 @@ export const CategoryPage = () => {
   return (
     <div>
       <h1>Страница управления категориями</h1>
-      {errors && (
-        <ToastErrors errorMessage={errors.errors[0].extensions.code} />
-      )}
+      {errors && <ToastErrors errorMessage={errors.errors[0].message} />}
 
       <Box>
         {categories ? (

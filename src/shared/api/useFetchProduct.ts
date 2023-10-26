@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useProductStore } from "../../app/state.ts";
 import { Pagination, Product, Sorting } from "../../entities/types.ts";
 
-export const useFetchProduct = async (props: { token: string | null }) => {
+export const useFetchProduct = async (props: { token: string | undefined }) => {
   const [setProducts, products] = useProductStore((state) => [
     state.addProductToStore,
     state.products,
