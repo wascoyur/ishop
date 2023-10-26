@@ -18,6 +18,7 @@ export const UserProfile = () => {
     }
 
     fetchProfile();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isUserAuth]);
 
   return (
@@ -29,9 +30,11 @@ export const UserProfile = () => {
 };
 
 export const ProfileCard = () => {
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading] = useState<boolean>(false);
   const user = useProfileStore((state) => state.user);
-
+  const date = user?.signUpDate
+    ? new Date(user?.signUpDate).toDateString()
+    : "Нет данных";
   return (
     <>
       {isLoading ? (
@@ -45,7 +48,7 @@ export const ProfileCard = () => {
           <div className="field-value">{user?.email || "Нет данных"}</div>
 
           <div className="field">Дата регистрации</div>
-          <div className="field-value">{user?.signUpDate || "Нет данных"}</div>
+          <div className="field-value">{date}</div>
         </div>
       )}
     </>
