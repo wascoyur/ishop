@@ -27,7 +27,6 @@ export const ButtonEditProduct = (props: { productId: string }) => {
       price: parseFloat(data.get("productPrice") as string),
       categoryId: data.get("categoryName") as string,
     };
-    console.log({ updatedProduct });
     setLoading(true);
     const { response, errors } = await putProduct({
       token: token!,
@@ -35,8 +34,10 @@ export const ButtonEditProduct = (props: { productId: string }) => {
     });
     if (errors) {
       setLoading(false);
+      setDialogOpen(false);
     } else if (response) {
       setLoading(false);
+      setDialogOpen(false);
     }
   };
   const FormEditProduct = (props: { product: Product | undefined }) => (
@@ -44,9 +45,7 @@ export const ButtonEditProduct = (props: { productId: string }) => {
       <Box className="default-style">
         <Form.Field name={"productName"} className="FormField">
           <Form.Label>Наименование продукта</Form.Label>
-          <Form.Message match="valueMissing">
-            Введите наименование товара
-          </Form.Message>
+
           <Form.Control asChild>
             <input
               placeholder={props?.product?.name || "Неизвестно"}
@@ -55,6 +54,9 @@ export const ButtonEditProduct = (props: { productId: string }) => {
               className="Input"
             />
           </Form.Control>
+          <Form.Message match="valueMissing" className="FormMessage">
+            Введите наименование товара
+          </Form.Message>
         </Form.Field>
         <Form.Field
           name="productPhoto"
@@ -62,9 +64,7 @@ export const ButtonEditProduct = (props: { productId: string }) => {
           className="FormField"
         >
           <Form.Label>Фото</Form.Label>
-          <Form.Message match="valueMissing">
-            Фставьте ссылку на фото товара
-          </Form.Message>
+
           <Form.Control asChild>
             <input
               placeholder={props?.product?.photo || "Неизвестно"}
@@ -73,10 +73,13 @@ export const ButtonEditProduct = (props: { productId: string }) => {
               className="Input"
             />
           </Form.Control>
+          <Form.Message match="valueMissing" className="FormMessage">
+            Фставьте ссылку на фото товара
+          </Form.Message>
         </Form.Field>
         <Form.Field name={"productPrice"} className="FormField">
           <Form.Label>Цена товара</Form.Label>
-          <Form.Message match="valueMissing">Введите цену</Form.Message>
+
           <Form.Control asChild>
             <input
               placeholder={String(props?.product?.price) || "Неизвестно"}
@@ -85,10 +88,13 @@ export const ButtonEditProduct = (props: { productId: string }) => {
               className="Input"
             />
           </Form.Control>
+          <Form.Message match="valueMissing" className="FormMessage">
+            Введите цену
+          </Form.Message>
         </Form.Field>
         <Form.Field name={"Category"} className="FormField">
           <Form.Label>Категория</Form.Label>
-          <Form.Message match="valueMissing">Выберите категорию</Form.Message>
+
           <Form.Control asChild>
             <select name="categoryName" className="Input">
               <option
@@ -107,6 +113,7 @@ export const ButtonEditProduct = (props: { productId: string }) => {
                 })}
             </select>
           </Form.Control>
+          <Form.Message match="valueMissing">Выберите категорию</Form.Message>
         </Form.Field>
         <Flex>
           <Form.Submit asChild>
