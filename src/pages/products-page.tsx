@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { useFetchProduct } from "../shared/api/useFetchProduct.ts";
 import { ButtonEditProduct } from "../widgets/editProductForm/editProductForm.tsx";
 import { useFetchCategories } from "../shared/api/getCategories.ts";
-import "../shared/common-form.scss";
+import "../shared/scss/common-form.scss";
 import { ButtonDeleteProduct } from "../widgets/editProductForm/deleteProductButton.tsx";
 import ToastErrors from "../widgets/Notify/Toast.tsx";
 

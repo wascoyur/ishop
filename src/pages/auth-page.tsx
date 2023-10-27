@@ -1,16 +1,14 @@
 import { useProfileStore } from "../app/state.ts";
-import { UserProfile } from "../widgets/UserProfile/UserProfile.tsx";
-import { LoginForm } from "../widgets/UserProfile/LoginForm.tsx";
+import { LoginForm } from "../entities/UserProfile/LoginForm.tsx";
 import { Button } from "@radix-ui/themes";
+import { UserProfile } from "../widgets/UserProfile/UserProfile.tsx";
 
 export const AuthPage = () => {
   const [isUserAuth, clearToken] = useProfileStore((state) => [
     state.isUserAuth,
     state.clearToken,
   ]);
-  // const tokenAdmin = useStore((state) => state.tokenAdmin);
-  // const clearTokens = useStore((state) => state.clearTokens);
-  // const isUserAuth = tokenUser || tokenAdmin;
+
   return (
     <div>
       <h1>{isUserAuth() ? "Вход в профиль" : "Регистрация или Вход"}</h1>

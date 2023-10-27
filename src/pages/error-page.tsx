@@ -1,5 +1,5 @@
 import { NavLink } from "react-router-dom";
-import "../shared/error-page-style.scss";
+import "../shared/scss/error-page-style.scss";
 
 export function ErrorPage() {
   return (

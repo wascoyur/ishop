@@ -1,11 +1,11 @@
 import { FormEvent, useEffect, useState } from "react";
-import "../../shared/common-form.scss";
+import "../../shared/scss/common-form.scss";
 import { useProfileStore } from "../../app/state.ts";
-import Loader from "../loader/Loader.tsx";
+import Loader from "../../widgets/loader/Loader.tsx";
 import { Auth } from "../../shared/api/apiTypes.ts";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuthSignIn } from "../../shared/api/useSinIn.ts";
-import { ServerErrors } from "../../entities/types.ts";
+import { ServerErrors } from "../types.ts";
 import { Button } from "@radix-ui/themes";
 
 export const LoginForm = () => {

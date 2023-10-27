@@ -1,9 +1,9 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
-import "../../shared/common-form.scss";
+import "../../shared/scss/common-form.scss";
 import { useNavigate } from "react-router-dom";
 import { useProfileStore } from "../../app/state.ts";
-import { ServerErrors } from "../../entities/types.ts";
-import Loader from "../loader/Loader.tsx";
+import { ServerErrors } from "../types.ts";
+import Loader from "../../widgets/loader/Loader.tsx";
 import { Button } from "@radix-ui/themes";
 
 export const RegisterForm = () => {
@@ -16,6 +16,7 @@ export const RegisterForm = () => {
   const navigate = useNavigate();
   useEffect(() => {
     token && navigate("/");
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
   const handleLogInUser = async (e: FormEvent) => {
     e.preventDefault();

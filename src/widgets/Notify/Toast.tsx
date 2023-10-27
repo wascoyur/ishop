@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useState } from "react";
 import * as Toast from "@radix-ui/react-toast";
-import "./styles.css";
+import "./toast-styles.css";
 import { useErrorStore } from "../../app/state.ts";
 
 const ToastErrors = (props: { errorMessage: string }) => {

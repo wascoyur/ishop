@@ -3,7 +3,7 @@ import { useProductStore, useProfileStore } from "../app/state.ts";
 import Loader from "../widgets/loader/Loader.tsx";
 import { Badge, Button, Card, Dialog, Heading, Text } from "@radix-ui/themes";
 import "../shared/scss/product-card.scss";
-import { AddToCartComponent } from "../widgets/product/addToCartComponent.tsx";
+import { AddToCartComponent } from "../entities/product/addToCartComponent.tsx";
 import { useFetchCategories } from "../shared/api/getCategories.ts";
 
 type homeProps = {

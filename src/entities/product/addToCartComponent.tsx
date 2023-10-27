@@ -1,6 +1,6 @@
 import { useProductStore } from "../../app/state.ts";
 import { Box, Button, Dialog, Flex, Text, TextField } from "@radix-ui/themes";
-import Loader from "../loader/Loader.tsx";
+import Loader from "../../widgets/loader/Loader.tsx";
 import { useState } from "react";
 
 export const AddToCartComponent = (props: { productId: string }) => {

@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import { ErrorPage } from "./error-page.tsx";
 import { AuthPage } from "./auth-page.tsx";
 import { HomePage } from "./home-page.tsx";
-import { RegisterForm } from "../widgets/UserProfile/RegisterForm.tsx";
+import { RegisterForm } from "../entities/UserProfile/RegisterForm.tsx";
 import { ProductsPage } from "./products-page.tsx";
 import { BucketPage } from "./bucket-page.tsx";
 import { CategoryPage } from "./category-page.tsx";

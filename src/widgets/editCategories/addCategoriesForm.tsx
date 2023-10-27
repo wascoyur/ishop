@@ -5,7 +5,7 @@ import { FormEvent, useState } from "react";
 import Loader from "../loader/Loader.tsx";
 import { addCategory } from "../../shared/api/addCategory.ts";
 import { addCategoryParams } from "../../shared/api/apiTypes.ts";
-import "../../shared/common-form.scss";
+import "../../shared/scss/common-form.scss";
 import { useFetchCategories } from "../../shared/api/getCategories.ts";
 
 export const ButtonAddCategory = () => {

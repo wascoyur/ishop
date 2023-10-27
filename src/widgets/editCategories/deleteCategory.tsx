@@ -6,7 +6,7 @@ import {
 } from "../../app/state.ts";
 import { controlCategory } from "../../shared/api/controlCategory.ts";
 import { addCategoryParams } from "../../shared/api/apiTypes.ts";
-import "../../shared/common-form.scss";
+import "../../shared/scss/common-form.scss";
 import { useState } from "react";
 import { ServerErrors } from "../../entities/types.ts";
 
@@ -17,10 +17,7 @@ export const ButtonDeleteCategory = (props: { categoryId: string }) => {
     state.removeCategoryById,
   ]);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [setError, errors] = useErrorStore((state) => [
-    state.setError,
-    state.errors,
-  ]);
+  const [setError] = useErrorStore((state) => [state.setError, state.errors]);
   const handleSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     const updatedCategory: addCategoryParams = {

@@ -5,7 +5,7 @@ import { FormEvent, useState } from "react";
 import Loader from "../loader/Loader.tsx";
 import { controlCategory } from "../../shared/api/controlCategory.ts";
 import { addCategoryParams } from "../../shared/api/apiTypes.ts";
-import "../../shared/common-form.scss";
+import "../../shared/scss/common-form.scss";
 
 export const ButtonEditCategory = (props: { categoryId: string }) => {
   const [loading, setLoading] = useState<boolean>(false);
