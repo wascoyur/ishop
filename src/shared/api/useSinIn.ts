@@ -1,7 +1,6 @@
 import { Auth } from "./apiTypes.ts";
 import { useEffect, useState } from "react";
-import { useProfileStore } from "../../app/state.ts";
-import { ServerErrors } from "../../entities/types.ts";
+import { useErrorStore, useProfileStore } from "../../app/state.ts";
 import { signIn } from "./signin.ts";
 
 export const useAuthSignIn = (props: Auth) => {
@@ -11,7 +10,7 @@ export const useAuthSignIn = (props: Auth) => {
     state.setToken,
     state.isUserAuth,
   ]);
-  const [error, setError] = useState<ServerErrors>();
+  const setError = useErrorStore((state) => state.setError);
 
   useEffect(() => {
     async function auth() {
@@ -28,7 +27,6 @@ export const useAuthSignIn = (props: Auth) => {
         } else {
           if (answer) {
             const errors = await answer.json();
-
             setError(errors);
           }
         }
@@ -42,5 +40,5 @@ export const useAuthSignIn = (props: Auth) => {
       auth();
     }
   }, [login, password, commandId]);
-  return { error, loading, isAuth };
+  return { loading, isAuth };
 };

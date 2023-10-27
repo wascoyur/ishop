@@ -1,31 +1,32 @@
 import { FormEvent, useEffect, useState } from "react";
 import "../../shared/scss/common-form.scss";
-import { useProfileStore } from "../../app/state.ts";
+import { useErrorStore, useProfileStore } from "../../app/state.ts";
 import Loader from "../../widgets/loader/Loader.tsx";
 import { Auth } from "../../shared/api/apiTypes.ts";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useAuthSignIn } from "../../shared/api/useSinIn.ts";
-import { ServerErrors } from "../types.ts";
 import { Button } from "@radix-ui/themes";
+import ToastErrors from "../../widgets/Notify/Toast.tsx";
 
 export const LoginForm = () => {
   const token = useProfileStore((state) => state.token);
   const [login, setLogin] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [data, setData] = useState<Auth>({} as Auth);
-  const { loading, isAuth, error } = useAuthSignIn(data);
+  const { loading, isAuth } = useAuthSignIn(data);
   const navigate = useNavigate();
+  const [errors, clearErrors] = useErrorStore((state) => [
+    state.errors,
+    state.clearErrors,
+  ]);
 
   useEffect(() => {
     isAuth() && navigate("/profile");
+    return () => {
+      clearErrors();
+    };
   }, [isAuth]);
-  const isError = (error: ServerErrors | undefined) => {
-    const err = error?.errors?.length || false;
-    if (err) {
-      // setPassword("");
-    }
-    return err;
-  };
+
   const handleLogInUser = async (e: FormEvent) => {
     e.preventDefault();
     login && password && setData({ login, password });
@@ -36,6 +37,7 @@ export const LoginForm = () => {
 
   return (
     <div className="default-style">
+      {errors && <ToastErrors errorMessage={errors.errors[0].message} />}
       {loading ? (
         <Loader />
       ) : (
@@ -52,11 +54,7 @@ export const LoginForm = () => {
             name="passwoord"
             onChange={(e) => setPassword(e.target.value)}
           />
-          {isError(error) && (
-            <strong className="error-message">
-              {error?.errors[0].message}
-            </strong>
-          )}
+
           <NavLink to={"/register"}>Зарегистрироваться</NavLink>
           <Button type={"submit"} disabled={!login || !password}>
             Войти
