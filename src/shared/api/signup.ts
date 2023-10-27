@@ -1,7 +1,7 @@
 import { Auth } from "./apiTypes.ts";
 
 export const signUp = async (props: Auth) => {
-  const SIGNIN = `https://19429ba06ff2.vps.myjino.ru/api/signup?login=${props.login}&password=${props.password}`;
+  const SIGNIN = `https://19429ba06ff2.vps.myjino.ru/api/signup`;
   const { login, password, commandId } = props;
   try {
     const res = await fetch(SIGNIN, {

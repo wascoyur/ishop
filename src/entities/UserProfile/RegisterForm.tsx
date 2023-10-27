@@ -1,10 +1,10 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 import "../../shared/scss/common-form.scss";
 import { useNavigate } from "react-router-dom";
-import { useProfileStore } from "../../app/state.ts";
-import { ServerErrors } from "../types.ts";
+import { useErrorStore, useProfileStore } from "../../app/state.ts";
 import Loader from "../../widgets/loader/Loader.tsx";
 import { Button } from "@radix-ui/themes";
+import ToastErrors from "../../widgets/Notify/Toast.tsx";
 
 export const RegisterForm = () => {
   const token = useProfileStore((state) => state.token);
@@ -12,10 +12,17 @@ export const RegisterForm = () => {
   const passwordRef = useRef<HTMLInputElement | null>(null);
   const commandRef = useRef<HTMLInputElement | null>(null);
   const [data, setData] = useState<Auth>({} as Auth);
-  const { error, loading } = useAuthSignUp(data);
+  const { loading } = useAuthSignUp(data);
+  const [errors, clearErrors] = useErrorStore((state) => [
+    state.errors,
+    state.clearErrors,
+  ]);
   const navigate = useNavigate();
   useEffect(() => {
     token && navigate("/");
+    return () => {
+      clearErrors();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token]);
   const handleLogInUser = async (e: FormEvent) => {
@@ -25,15 +32,10 @@ export const RegisterForm = () => {
     const commandId = commandRef.current?.value || undefined;
     login && password && setData({ login, password, commandId });
   };
-  const isError = (error: ServerErrors | undefined) => {
-    const err = error?.errors?.length || false;
-    if (err) {
-      // setPassword("");
-    }
-    return err;
-  };
+
   return (
     <div className="default-style">
+      {errors && <ToastErrors errorMessage={errors.errors[0].message} />}
       {loading ? (
         <Loader />
       ) : (
@@ -44,13 +46,9 @@ export const RegisterForm = () => {
           <input ref={passwordRef} type="password" name="passwoord" />
           <label htmlFor="commandRef">Введите номер команды</label>
           <input ref={commandRef} type="text" name="passwoord" />
-          {isError(error) && (
-            <strong className="error-message">
-              {error?.errors[0].message}
-            </strong>
-          )}
+
           <Button type={"submit"} disabled={false}>
-            Войти
+            Зарегистрироваться
           </Button>
         </form>
       )}
@@ -71,8 +69,7 @@ const useAuthSignUp = (props: Auth) => {
     state.setToken,
     state.isUserAuth,
   ]);
-  const [error, setError] = useState<ServerErrors>();
-  const navigate = useNavigate();
+  const setError = useErrorStore((state) => state.setError);
 
   useEffect(() => {
     async function auth() {
@@ -94,7 +91,6 @@ const useAuthSignUp = (props: Auth) => {
           }
         }
         setLoading(false);
-        navigate("/");
       } catch (err) {
         setLoading(false);
       }
@@ -104,7 +100,7 @@ const useAuthSignUp = (props: Auth) => {
       auth();
     }
   }, [login, password, commandId]);
-  return { error, loading, isAuth };
+  return { loading, isAuth };
 };
 
 export const signUp = async (props: Auth) => {
